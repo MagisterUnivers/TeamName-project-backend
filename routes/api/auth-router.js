@@ -1,9 +1,7 @@
 const express = require('express');
 require('dotenv').config();
 const usersController = require('../../controllers/usersController');
-
 const authenticate = require('../../middleware/authenticate');
-const usersSchema = require('../../schemas/usersSchema');
 const isBodyEmpty = require('../../middleware/isBodyEmpty');
 const validateBody = require('../../decorators/validateBody');
 const upload = require('../../middleware/upload');
@@ -14,14 +12,14 @@ const authRouter = express.Router();
 authRouter.post(
 	'/register',
 	isBodyEmpty,
-	validateBody(usersSchema.userRegisterSchema),
+	validateBody(schemas.userRegisterSchema),
 	usersController.register
 );
 
 authRouter.post(
 	'/login',
 	isBodyEmpty,
-	validateBody(usersSchema.userLoginSchema),
+	validateBody(schemas.userLoginSchema),
 	usersController.login
 );
 

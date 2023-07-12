@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const jimp = require('jimp');
 const fs = require('fs/promises');
 const path = require('path');
-const gravatar = require('gravatar');
+// const gravatar = require('gravatar');
 const { nanoid } = require('nanoid');
 require('dotenv').config();
 
@@ -22,8 +22,6 @@ const register = async (req, res) => {
 	const { email, password } = req.body;
 	const user = await Users.findOne({ email });
 	if (user) throw HttpError(409, 'Email already in use');
-
-	const avatarURL = gravatar.url(email, { s: '200', r: 'pg', d: 'mm' });
 	const hashPassword = await bcrypt.hash(password, 10);
 	const verificationToken = nanoid();
 
@@ -31,21 +29,21 @@ const register = async (req, res) => {
 		...req.body,
 		password: hashPassword,
 		verificationToken,
-		avatarURL
 	});
 
 	const sendEmailToVerify = {
 		to: email,
 		subject: 'Verify email',
 		html: `<a target="_blank" href="${BASE_URL}/users/verify/${verificationToken}">Click to verify email</a>`
+	    // html: `<a target="_blank" href="http://localhost:3000/TeamName-project/${verificationToken}">Click to verify email</a>`
 	};
 
 	await emailVerify(sendEmailToVerify);
 
 	res.status(201).json({
 		user: {
+			name: result.name,
 			email: result.email,
-			subscription: result.subscription
 		}
 	});
 };
@@ -129,13 +127,20 @@ const verify = async (req, res) => {
 	const user = await Users.findOne({ verificationToken });
 	if (!user) throw HttpError(404);
 
+	const { _id: id } = user;
+	const payload = { id };
+
+	const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '23h' });
+
 	await Users.findByIdAndUpdate(user._id, {
 		verify: true,
-		verificationToken: null
+		verificationToken: null,
+		token
 	});
 
 	res.status(200).json({
-		message: 'Verification successful'
+		message: 'Verification successful',
+		token
 	});
 };
 

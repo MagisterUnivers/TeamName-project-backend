@@ -34,7 +34,7 @@ const register = async (req, res) => {
 	const sendEmailToVerify = {
 		to: email,
 		subject: 'Verify email',
-	    html: `<a href="http://localhost:3000/TeamName-project/VerificationPage?verificationToken=${verificationToken}">Click to verify email</a>`
+	    html: `<a href="http://localhost:3000/TeamName-project/register?verificationToken=${verificationToken}">Click to verify email</a>`
 	};
 
 	await emailVerify(sendEmailToVerify);

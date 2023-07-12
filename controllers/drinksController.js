@@ -3,6 +3,7 @@ const { HttpError } = require("../helpers");
 
 const Drinks = require("../models/drinks");
 const Categories = require("../models/categories");
+const Ingredients = require("../models/ingredients");
 
 const getCategoryList = async (req, res) => {
   const result = await Categories.find().sort({ category: 1 });
@@ -81,7 +82,7 @@ const searchAllDrinks = async (req, res) => {
 // Ingredients
 
 const getIngredientsList = async (req, res) => {
-  const result = await Categories.find().sort({ category: 1 });
+  const result = await Ingredients.find().sort({ title: 1 });
   return res.json(result);
 };
 const getDrinksByIngredient = async (req, res) => {
@@ -90,7 +91,8 @@ const getDrinksByIngredient = async (req, res) => {
   const { page = 1, limit = 9 } = req.query;
   const skip = (page - 1) * limit;
   const result = await Drinks.find(
-    { ingredients: { $elemMatch: { title } } },
+    // { ingredients: { $elemMatch: { title } } },
+    { 'ingredients.title': title },
     "drink drinkThumb category ingredients",
     {
       skip,

@@ -1,25 +1,25 @@
 const { Schema, model } = require('mongoose');
 const handleMongooseError = require('../helpers/handleMongooseError');
-const { emailRegexp } = require('../constants/users');
-const { string } = require('joi');
+const { nameRegexp, emailRegexp, passwordRegexp } = require('../constants/users');
 
 const authSchema = Schema(
 	{
-		password: {
-			type: String,
-			minlength: 7,
-			required: [true, 'Set password for user']
-		},
+		name: {
+		type: String,
+		match: nameRegexp,
+		required: [true, 'Name is required']
+	    },
 		email: {
 			type: String,
 			match: emailRegexp,
 			required: [true, 'Email is required'],
 			unique: true
 		},
-		subscription: {
+		password: {
 			type: String,
-			enum: ['starter', 'pro', 'business'],
-			default: 'starter'
+			match: passwordRegexp,
+			minlength: 6,
+			required: [true, 'Set password for user']
 		},
 		avatarURL: {
 			type: String
@@ -34,7 +34,7 @@ const authSchema = Schema(
 		},
 		token: String
 	},
-	{ versionKey: false }
+	{ versionKey: false, timestamps: true }
 );
 
 authSchema.post('save', handleMongooseError);

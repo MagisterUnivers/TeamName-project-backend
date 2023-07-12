@@ -1,11 +1,11 @@
 const Joi = require('joi');
 
-const { emailRegexp } = require('../constants/users');
+const { nameRegexp, emailRegexp, passwordRegexp } = require('../constants/users');
 
 const userRegisterSchema = Joi.object({
-	password: Joi.string().required().min(6),
+	name: Joi.string().required().pattern(nameRegexp),
 	email: Joi.string().required().pattern(emailRegexp),
-	subscription: Joi.string()
+	password: Joi.string().required().min(6).max(16).pattern(passwordRegexp),
 });
 
 const userLoginSchema = Joi.object({

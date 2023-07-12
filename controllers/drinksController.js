@@ -21,36 +21,40 @@ const getDrinksByCategory = async (req, res) => {
 };
 
 const getDrinksByFourCategories = async (req, res) => {
-  const limit = 3;
-  const ordinaryDrinks = await Drinks.find(
-    { category: "Ordinary Drink" },
-    "drink drinkThumb category",
-    {
-      limit,
-    }
-  );
-  const cocktails = await Drinks.find(
-    { category: "Cocktail" },
-    "drink drinkThumb category",
-    {
-      limit,
-    }
-  );
-  const shakes = await Drinks.find(
-    { category: "Shake" },
-    "drink drinkThumb category",
-    {
-      limit,
-    }
-  );
-  const others = await Drinks.find(
-    { category: "Other/Unknown" },
-    "drink drinkThumb category",
-    {
-      limit,
-    }
-  );
-  const result = { ordinaryDrinks, cocktails, shakes, others };
+  const result = await Drinks.find(
+    { $or: [{category: "Ordinary Drink" }, {category: "Cocktail" },{category: "Shake" }, {category: "Other/Unknown" }]},
+    "drink drinkThumb category"
+     );
+  // const limit = 3;
+  // const ordinaryDrinks = await Drinks.find(
+  //   { category: "Ordinary Drink" },
+  //   "drink drinkThumb category",
+    // {
+    //   limit,
+    // }
+  // );
+  // const cocktails = await Drinks.find(
+  //   { category: "Cocktail" },
+  //   "drink drinkThumb category",
+    // {
+    //   limit,
+    // }
+  // );
+  // const shakes = await Drinks.find(
+  //   { category: "Shake" },
+  //   "drink drinkThumb category",
+    // {
+    //   limit,
+    // }
+  // );
+  // const others = await Drinks.find(
+  //   { category: "Other/Unknown" },
+  //   "drink drinkThumb category",
+    // {
+    //   limit,
+    // }
+  // );
+  // const result = { ordinaryDrinks, cocktails, shakes, others };
   res.json(result);
 };
 

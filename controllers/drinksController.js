@@ -68,7 +68,7 @@ const getOneDrinkById = async (req, res) => {
   console.log(req.params);
   const { id } = req.params;
   const result = await Drinks.findById(id).exec();
-  if (!result) throw HttpError(404, `Contact with id=${id} was not found`);
+  if (!result) throw HttpError(404, `Cocktail with id=${id} was not found`);
   res.json(result);
 };
 
@@ -117,8 +117,8 @@ const deleteOwnDrink = async (req, res) => {
   console.log(req.params);
   const { drinkId } = req.params;
   const result = await Drinks.findByIdAndDelete(drinkId);
-  if (!result) throw HttpError(404, `Contact with id=${drinkId} was not found`);
-  res.json({ message: "Contact deleted" });
+  if (!result) throw HttpError(404, `Cocktail with id=${drinkId} was not found`);
+  res.json({ message: "Cocktail was deleted" });
 };
 
 // Favorites
@@ -136,8 +136,8 @@ const deleteFavoriteDrink = async (req, res) => {
   console.log(req.params);
   const { drinkId } = req.params;
   const result = await Drinks.findByIdAndDelete(drinkId);
-  if (!result) throw HttpError(404, `Contact with id=${drinkId} was not found`);
-  res.json({ message: "Contact deleted" });
+  if (!result) throw HttpError(404, `Cocktail with id=${drinkId} was not found`);
+  res.json({ message: "Cocktail was deleted" });
 };
 
 // Popular

@@ -48,6 +48,6 @@ const drinksSchema = Schema(
 
 drinksSchema.post("save", handleMongooseError);
 
-const Drinks = model("drink", drinksSchema);
+const Drinks = model("cocktail", drinksSchema);
 
 module.exports = Drinks;

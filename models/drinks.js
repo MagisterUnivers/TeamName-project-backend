@@ -1,7 +1,7 @@
 const { Schema, model } = require("mongoose");
 const handleMongooseError = require("../helpers/handleMongooseError");
 
-const { categoryList } = require("../constants/drinks");
+const { categoryList, glassList } = require("../constants/drinks");
 
 const drinksSchema = Schema(
   {
@@ -16,6 +16,7 @@ const drinksSchema = Schema(
     },
     glass: {
       type: String,
+      enum: glassList,
       required: true,
     },
     instructions: {

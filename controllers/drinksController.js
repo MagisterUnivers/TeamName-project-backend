@@ -74,7 +74,6 @@ const getOneDrinkById = async (req, res) => {
 // Search
 
 const searchAllDrinks = async (req, res) => {
-  console.log(req);
   const {  query, category, ingredient } = req.query;
   const { page = 1, limit = 9 } = req.query;
   const skip = (page - 1) * limit;

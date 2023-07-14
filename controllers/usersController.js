@@ -28,13 +28,13 @@ const register = async (req, res) => {
 	const result = await Users.create({
 		...req.body,
 		password: hashPassword,
-		verificationToken,
+		verificationToken
 	});
 
 	const sendEmailToVerify = {
 		to: email,
 		subject: 'Verify email',
-	    html: `<a href="http://localhost:3000/TeamName-project/register?verificationToken=${verificationToken}">Click to verify email</a>`
+		html: `<a href="http://localhost:3000/TeamName-project/register?verificationToken=${verificationToken}">Click to verify email</a>`
 	};
 
 	await emailVerify(sendEmailToVerify);
@@ -42,7 +42,7 @@ const register = async (req, res) => {
 	res.status(201).json({
 		user: {
 			name: result.name,
-			email: result.email,
+			email: result.email
 		}
 	});
 };
@@ -56,13 +56,13 @@ const login = async (req, res) => {
 	const passwordCompare = await bcrypt.compare(password, user.password);
 	if (!passwordCompare) throw HttpError(401, 'Email or password is wrong');
 
-	const { _id: id, email, subscription } = user;
+	const { _id: id, email, name } = user;
 	const payload = { id };
 
 	const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '23h' });
 
 	await Users.findByIdAndUpdate(id, { token });
-	res.json({ token, user: { email, subscription } });
+	res.json({ token, user: { email, name } });
 };
 
 const logout = async (req, res) => {

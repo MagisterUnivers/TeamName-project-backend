@@ -12,3 +12,5 @@ glassesSchema.post("save", handleMongooseError);
 const Glasses = model("glass", glassesSchema);
 
 module.exports = Glasses;
+
+module.exports = Glasses;

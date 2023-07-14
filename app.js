@@ -22,14 +22,14 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/users', authRouter);
-app.use('/api/contacts', contactsRouter);
-app.use('/api/recipes', drinksRouter);
-app.use('/api/search', searchRouter);
-app.use('/api/ingredients', ingredientsRouter);
-app.use('/api/glass', glassRouter);
-app.use('/api/own', ownRouter);
-app.use('/api/favorite', favoriteRouter);
-app.use('/api/popular-recipe', popularRouter);
+app.use('/api/contacts', contactsRouter); // homework
+app.use('/recipes', drinksRouter);
+app.use('/search', searchRouter);
+app.use('/ingredients', ingredientsRouter);
+app.use('/glass', glassRouter);
+app.use('/own', ownRouter);
+app.use('/favorite', favoriteRouter);
+app.use('/popular-recipe', popularRouter);
 
 app.use((req, res) => {
 	res.status(404).json({ message: 'Not found' });

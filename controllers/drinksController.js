@@ -65,7 +65,6 @@ const getDrinksByFourCategories = async (req, res) => {
   res.json(result);
 };
 const getOneDrinkById = async (req, res) => {
-  console.log(req.params);
   const { id } = req.params;
   const result = await Drinks.findById(id).exec();
   if (!result) throw HttpError(404, `Cocktail with id=${id} was not found`);
@@ -75,7 +74,21 @@ const getOneDrinkById = async (req, res) => {
 // Search
 
 const searchAllDrinks = async (req, res) => {
-  const result = await Drinks.find();
+  const {  query, category, ingredient } = req.query;
+  const { page = 1, limit = 9 } = req.query;
+  const skip = (page - 1) * limit;
+  const dbQuery = {};
+  category && (dbQuery.category = category);
+  ingredient && (dbQuery["ingredients.title"] = ingredient);
+  query && (dbQuery.drink = {$regex: query, $options: 'i'});
+  const result = await Drinks.find(
+    dbQuery,
+    "drink drinkThumb category ingredients",
+    {
+      skip,
+      limit,
+    }
+  );
   res.json(result);
 };
 
@@ -86,13 +99,12 @@ const getIngredientsList = async (req, res) => {
   return res.json(result);
 };
 const getDrinksByIngredient = async (req, res) => {
-  console.log(req);
   const { title } = req.query;
   const { page = 1, limit = 9 } = req.query;
   const skip = (page - 1) * limit;
   const result = await Drinks.find(
     // { ingredients: { $elemMatch: { title } } },
-    { 'ingredients.title': title },
+    { "ingredients.title": title },
     "drink drinkThumb category ingredients",
     {
       skip,
@@ -114,10 +126,10 @@ const addOwnDrink = async (req, res) => {
   res.status(201).json(result);
 };
 const deleteOwnDrink = async (req, res) => {
-  console.log(req.params);
   const { drinkId } = req.params;
   const result = await Drinks.findByIdAndDelete(drinkId);
-  if (!result) throw HttpError(404, `Cocktail with id=${drinkId} was not found`);
+  if (!result)
+    throw HttpError(404, `Cocktail with id=${drinkId} was not found`);
   res.json({ message: "Cocktail was deleted" });
 };
 
@@ -133,10 +145,10 @@ const addFavoriteDrink = async (req, res) => {
   res.status(201).json(result);
 };
 const deleteFavoriteDrink = async (req, res) => {
-  console.log(req.params);
   const { drinkId } = req.params;
   const result = await Drinks.findByIdAndDelete(drinkId);
-  if (!result) throw HttpError(404, `Cocktail with id=${drinkId} was not found`);
+  if (!result)
+    throw HttpError(404, `Cocktail with id=${drinkId} was not found`);
   res.json({ message: "Cocktail was deleted" });
 };
 

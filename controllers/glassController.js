@@ -1,11 +1,10 @@
 const { ctrlWrapper } = require("../decorators");
+const Glasses = require("../models/glasses");
 
-const { glassList } = require("../constants/drinks");
 
 const getAllGlasses = async (req, res) => {
-    console.log(req)
-  const result = glassList;
-  return res.json(result.sort());
+  const result = await Glasses.find().sort({ title: 1 });
+  return res.json(result);
 };
 
 module.exports = {

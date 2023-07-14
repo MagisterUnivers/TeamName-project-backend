@@ -13,10 +13,16 @@ const getDrinksByCategory = async (req, res) => {
   const { category } = req.params;
   const { page = 1, limit = 9 } = req.query;
   const skip = (page - 1) * limit;
-  const result = await Drinks.find({ category }, "drink drinkThumb category", {
-    skip,
-    limit,
-  });
+  const cocktails = await Drinks.find(
+    { category },
+    "drink drinkThumb category",
+    {
+      skip,
+      limit,
+    }
+  );
+  const totalHits = await Drinks.find({ category }).count();
+  const result = { cocktails, totalHits, page };
   res.json(result);
 };
 const getDrinksByFourCategories = async (req, res) => {
@@ -74,14 +80,14 @@ const getOneDrinkById = async (req, res) => {
 // Search
 
 const searchAllDrinks = async (req, res) => {
-  const {  query, category, ingredient } = req.query;
+  const { query, category, ingredient } = req.query;
   const { page = 1, limit = 9 } = req.query;
   const skip = (page - 1) * limit;
   const dbQuery = {};
   category && (dbQuery.category = category);
   ingredient && (dbQuery["ingredients.title"] = ingredient);
-  query && (dbQuery.drink = {$regex: query, $options: 'i'});
-  const result = await Drinks.find(
+  query && (dbQuery.drink = { $regex: query, $options: "i" });
+  const cocktails = await Drinks.find(
     dbQuery,
     "drink drinkThumb category ingredients",
     {
@@ -89,6 +95,8 @@ const searchAllDrinks = async (req, res) => {
       limit,
     }
   );
+  const totalHits = await Drinks.find( dbQuery).count();
+  const result = { cocktails, totalHits, page };
   res.json(result);
 };
 

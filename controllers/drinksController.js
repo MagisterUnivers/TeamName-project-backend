@@ -40,7 +40,8 @@ const getDrinksByFourCategories = async (req, res) => {
     },
     "drink drinkThumb category"
   );
-
+  res.json(result);
+  };
 const getOneDrinkById = async (req, res) => {
   const { id } = req.params;
   const result = await Drinks.findById(id).exec();
@@ -196,5 +197,5 @@ module.exports = {
   getAllFavoriteDrinks: ctrlWrapper(getAllFavoriteDrinks),
   addFavoriteDrink: ctrlWrapper(addFavoriteDrink),
   deleteFavoriteDrink: ctrlWrapper(deleteFavoriteDrink),
-  getPopular: ctrlWrapper(getPopular),
-};
+  getPopular: ctrlWrapper(getPopular)
+}

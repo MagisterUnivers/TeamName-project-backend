@@ -84,6 +84,14 @@ const current = (req, res) => {
 	});
 };
 
+const refresh = async (req, res) => {
+	// const { _id } = req.user;
+	const { token } = req.headers;
+	const user = await Users.findOne(token);
+	await Users.findByIdAndUpdate(user, { token: token });
+	res.json({ token });
+};
+
 const subscription = async (req, res) => {
 	const { _id, subscription: currentSubscription } = req.user;
 	const { newSubscription } = req.body;
@@ -109,11 +117,11 @@ const updateTheme = async (req, res) => {
 	const { theme: newTheme } = req.body;
 	console.log(req.body);
 	if (currentTheme === newTheme) {
-		throw HttpError(400, `${newTheme} theme is already set!`)
+		throw HttpError(400, `${newTheme} theme is already set!`);
 	}
 	await Users.findByIdAndUpdate(_id, { theme: newTheme });
-	res.json({theme: newTheme})
-}
+	res.json({ theme: newTheme });
+};
 
 const avatars = async (req, res) => {
 	// move image
@@ -183,4 +191,5 @@ module.exports = {
 	verify: ctrlWrapper(verify),
 	resendVerifyEmail: ctrlWrapper(resendVerifyEmail),
 	updateTheme: ctrlWrapper(updateTheme),
+	refresh: ctrlWrapper(refresh)
 };

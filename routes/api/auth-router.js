@@ -29,8 +29,9 @@ authRouter.post(
 	usersController.resendVerifyEmail
 );
 
-
 authRouter.get('/current', authenticate, usersController.current);
+
+authRouter.post('/refresh', usersController.refresh);
 
 authRouter.get('/verify/:verificationToken', usersController.verify);
 
@@ -38,7 +39,12 @@ authRouter.post('/logout', authenticate, usersController.logout);
 
 authRouter.patch('/subscription', authenticate, usersController.subscription);
 
-authRouter.patch('/theme', authenticate, validateBody(schemas.userThemeSchema), usersController.updateTheme)
+authRouter.patch(
+	'/theme',
+	authenticate,
+	validateBody(schemas.userThemeSchema),
+	usersController.updateTheme
+);
 
 authRouter.patch(
 	'/avatars',

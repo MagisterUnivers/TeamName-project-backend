@@ -13,9 +13,9 @@ const storage = multer.diskStorage({
 	}
 });
 
-const limits = {
-	fileSize: 1024 * 1024
-};
+// const limits = {
+// 	fileSize: 1024 * 1024
+// };
 
 const mimetypeWhitelist = ['image/jpeg', 'image/png'];
 
@@ -28,7 +28,7 @@ const fileFilter = (req, file, cb) => {
 
 const upload = multer({
 	storage,
-	limits,
+	// limits,
 	fileFilter
 });
 

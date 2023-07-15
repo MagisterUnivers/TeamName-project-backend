@@ -8,17 +8,21 @@ const drinkSchema = Joi.object({
   }),
   category: Joi.string()
     .valid(...categoryList)
-    .required()
+    // .required()
     .messages({ "any.required": 'Missing required "category" field' }),
   glass: Joi.string()
     .valid(...glassList)
-    .required()
+    // .required()
     .messages({ "any.required": 'Missing required "glass" field' }),
-  instructions: Joi.string().required().messages({
+  instructions: Joi.string()
+  // .required()
+  .messages({
     "any.required": 'Missing required "instructions" field',
   }),
   drinkThumb: Joi.string(),
-  about: Joi.string().required().messages({
+  about: Joi.string()
+  // .required()
+  .messages({
     "any.required": 'Missing required "about" field',
   }),
 });

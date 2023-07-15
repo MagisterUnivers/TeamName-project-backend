@@ -125,7 +125,14 @@ const getDrinksByIngredient = async (req, res) => {
 // Own
 
 const getAllOwnDrinks = async (req, res) => {
-  const result = await Drinks.find();
+  console.log(req.user)
+  const {_id: owner} = req.user;
+  console.log(req.user)
+  const {page = 1, limit = 9} = req.query;
+  const skip = (page - 1) * limit;
+  const cocktails = await Drinks.find({owner}, "drink drinkThumb category ingredients about", {skip, limit}).populate("owner", "name email");
+  const totalHits = await Drinks.find( {owner}).count();
+  const result = { cocktails, totalHits, page };
   res.json(result);
 };
 const addOwnDrink = async (req, res) => {

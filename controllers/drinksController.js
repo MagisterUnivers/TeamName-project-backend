@@ -1,5 +1,8 @@
 const { ctrlWrapper } = require("../decorators");
 const { HttpError } = require("../helpers");
+const path = require('path');
+const fs = require('fs/promises');
+const drinksImgDir = path.resolve('public', 'drinksImg');
 
 const Drinks = require("../models/drinks");
 const Categories = require("../models/categories");
@@ -125,16 +128,25 @@ const getDrinksByIngredient = async (req, res) => {
 // Own
 
 const getAllOwnDrinks = async (req, res) => {
-  const result = await Drinks.find();
+  const { _id: owner } = req.user;
+  const result = await Drinks.find({owner});
   res.json(result);
 };
+
 const addOwnDrink = async (req, res) => {
-  // const { _id: owner } = req.user;
-  const result = await Drinks.create({ ...req.body });
+  const { path: oldPath, filename } = req.file;
+  const newPath = path.join(drinksImgDir, filename);
+  await fs.rename(oldPath, newPath);
+
+  const drinkThumb = path.join('drinksImg', filename);
+  const { _id: owner } = req.user;
+
+  const result = await Drinks.create({ ...req.body, owner, drinkThumb });
   res.status(201).json(result);
 };
+
 const deleteOwnDrink = async (req, res) => {
-  const { drinkId } = req.params;
+  const { id: drinkId} = req.params;
   const result = await Drinks.findByIdAndDelete(drinkId);
   if (!result)
     throw HttpError(404, `Cocktail with id=${drinkId} was not found`);

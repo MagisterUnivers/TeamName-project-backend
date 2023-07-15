@@ -17,6 +17,6 @@ router.post(
 	drinksController.addOwnDrink
 );
 
-router.delete('/:drinkId', idValidation, drinksController.deleteOwnDrink);
+router.delete('/:id', idValidation, drinksController.deleteOwnDrink);
 
 module.exports = router;

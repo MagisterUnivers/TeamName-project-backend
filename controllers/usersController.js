@@ -104,6 +104,17 @@ const subscription = async (req, res) => {
 	}
 };
 
+const updateTheme = async (req, res) => {
+	const { _id, theme: currentTheme } = req.user;
+	const { theme: newTheme } = req.body;
+	console.log(req.body);
+	if (currentTheme === newTheme) {
+		throw HttpError(400, `${newTheme} theme is already set!`)
+	}
+	await Users.findByIdAndUpdate(_id, { theme: newTheme });
+	res.json({theme: newTheme})
+}
+
 const avatars = async (req, res) => {
 	// move image
 	const { path: oldPath, filename } = req.file;
@@ -170,5 +181,6 @@ module.exports = {
 	subscription: ctrlWrapper(subscription),
 	avatars: ctrlWrapper(avatars),
 	verify: ctrlWrapper(verify),
-	resendVerifyEmail: ctrlWrapper(resendVerifyEmail)
+	resendVerifyEmail: ctrlWrapper(resendVerifyEmail),
+	updateTheme: ctrlWrapper(updateTheme),
 };

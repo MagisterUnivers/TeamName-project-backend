@@ -28,6 +28,10 @@ const authSchema = Schema(
 			type: Boolean,
 			default: false
 		},
+		theme: {
+			type: String,
+			default: 'dark'
+		},
 		verificationToken: {
 			type: String,
 			required: [true, 'Verify token is required']

@@ -3,7 +3,8 @@ const Joi = require('joi');
 const {
 	nameRegexp,
 	emailRegexp,
-	passwordRegexp
+	passwordRegexp,
+	themeList
 } = require('../constants/users');
 
 const userRegisterSchema = Joi.object({
@@ -21,8 +22,18 @@ const userEmailSchema = Joi.object({
 	email: Joi.string().required().pattern(emailRegexp)
 });
 
+const userThemeSchema = Joi.object({
+  theme: Joi.string()
+    .required()
+    .valid(...themeList)
+    .messages({
+      "object.empty": "{#label} Object must contain at least one field",
+      "any.required": "{#label} missing required field",
+    }),
+});
 module.exports = {
 	userRegisterSchema,
 	userLoginSchema,
-	userEmailSchema
+	userEmailSchema,
+	userThemeSchema,
 };

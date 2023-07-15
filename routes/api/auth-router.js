@@ -31,6 +31,8 @@ authRouter.post(
 
 authRouter.get('/current', authenticate, usersController.current);
 
+authRouter.post('/refresh', usersController.refresh);
+
 authRouter.get('/verify/:verificationToken', usersController.verify);
 
 authRouter.post('/logout', authenticate, usersController.logout);
@@ -38,10 +40,24 @@ authRouter.post('/logout', authenticate, usersController.logout);
 authRouter.patch('/subscription', authenticate, usersController.subscription);
 
 authRouter.patch(
+	'/theme',
+	authenticate,
+	validateBody(schemas.userThemeSchema),
+	usersController.updateTheme
+);
+
+authRouter.patch(
 	'/avatars',
 	authenticate,
 	upload.single('avatarURL'),
 	usersController.avatars
 );
+
+// router.post(
+//   "/",
+//   authMiddleware,
+//   uploadCloud.single("image"),
+//   PetController.petRegister
+// );
 
 module.exports = authRouter;

@@ -162,6 +162,19 @@ const resendVerifyEmail = async (req, res) => {
 	});
 };
 
+// CLOUDINARY
+
+// userUpdate = async (req, res) => {
+//   const id = req.user._id;
+//   const name = req.body;
+//   const data = !!req.file
+//     ? { avatarURL: req.file.path, name }
+//     : { name };
+
+// await User.findByIdAndUpdate(id, data )
+
+// };
+
 module.exports = {
 	register: ctrlWrapper(register),
 	login: ctrlWrapper(login),

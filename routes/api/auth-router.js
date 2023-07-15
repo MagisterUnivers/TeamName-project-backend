@@ -44,4 +44,11 @@ authRouter.patch(
 	usersController.avatars
 );
 
+// router.post(
+//   "/",
+//   authMiddleware,
+//   uploadCloud.single("image"),
+//   PetController.petRegister
+// );
+
 module.exports = authRouter;

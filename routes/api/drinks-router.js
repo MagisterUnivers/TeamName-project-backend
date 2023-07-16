@@ -4,11 +4,11 @@ const drinksController = require('../../controllers/drinksController');
 // const schemas = require('../../schemas/drinksSchema');
 // const isBodyEmpty = require('../../middleware/isBodyEmpty');
 const idValidation = require('../../middleware/idValidation');
-// const authenticate = require('../../middleware/authenticate');
+const authenticate = require('../../middleware/authenticate');
 
 const router = express.Router();
 
-// router.use(authenticate);
+router.use(authenticate);
 
 router.get('/category-list', drinksController.getCategoryList);
 router.get('/main-page', drinksController.getDrinksByFourCategories);

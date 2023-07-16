@@ -27,6 +27,10 @@ const drinkSchema = Joi.object({
   }),
 });
 
+// const updateFavoriteSchema = Joi.object({
+//   favorite: Joi.string(),
+
+// })
 module.exports = { drinkSchema };
 
 // ingredients: {

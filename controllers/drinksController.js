@@ -141,13 +141,15 @@ const getAllOwnDrinks = async (req, res) => {
 };
 
 const addOwnDrink = async (req, res) => {
-  const { path: oldPath, filename } = req.file;
+  let drinkThumb = ''
+  if(req.file) {
+    const { path: oldPath, filename } = req.file;
   const newPath = path.join(drinksImgDir, filename);
   await fs.rename(oldPath, newPath);
+  drinkThumb = path.join('drinksImg', filename);
+  }
 
-  const drinkThumb = path.join('drinksImg', filename);
   const { _id: owner } = req.user;
-
   const result = await Drinks.create({ ...req.body, owner, drinkThumb });
   res.status(201).json(result);
 };

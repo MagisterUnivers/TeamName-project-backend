@@ -99,22 +99,18 @@ const refresh = async (req, res) => {
 };
 
 const subscription = async (req, res) => {
-	const { _id, subscription: currentSubscription } = req.user;
-	const { newSubscription } = req.body;
+	const { _id, subscriptionEmail: currentSubscriptionEmail } = req.user;
+	const { email:newSubscriptionEmail } = req.body;
+	if (currentSubscriptionEmail === '') {
+		await Users.findByIdAndUpdate(_id, { subscriptionEmail: newSubscriptionEmail });
+		res.status(200).json({
+			message: "You successfully subscribed on our newsletter",
+			subscriptionEmail: newSubscriptionEmail,
+    });
 
-	if (currentSubscription !== newSubscription) {
-		const validSubscriptions = ['starter', 'pro', 'business'];
-		if (validSubscriptions.includes(newSubscription)) {
-			await Users.findByIdAndUpdate(_id, { subscription: newSubscription });
-			res.json({ newSubscription });
-		} else {
-			throw HttpError(
-				400,
-				"Invalid subscription value. Valid options are 'starter', 'pro', or 'business'"
-			);
-		}
-	} else {
-		throw HttpError(400, 'This subscription is already in use');
+	}
+	else {
+		throw HttpError(400, `You already subscribed. Email for newsletter is ${currentSubscriptionEmail}`);
 	}
 };
 

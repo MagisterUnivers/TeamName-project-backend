@@ -75,17 +75,23 @@ const logout = async (req, res) => {
 	});
 };
 
-const current = (req, res) => {
-	const { email, subscription } = req.user;
+const current = async (req, res) => {
+	const { email, _id } = req.user;
+	// const { authorization } = req.headers;
+	// const UPDtoken = authorization.split(' ');
+
+	// const user = await Users.findById('64b25f39a99c3c7857e27058');
+	// console.log(user);
+	// const result = await Users.findOne({ token: UPDtoken[1] });
+	// console.log(result);
 
 	res.json({
 		email,
-		subscription
+		_id
 	});
 };
 
 const refresh = async (req, res) => {
-	// const { _id } = req.user;
 	const { token } = req.headers;
 	const user = await Users.findOne(token);
 	await Users.findByIdAndUpdate(user, { token: token });

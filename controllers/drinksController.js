@@ -42,6 +42,37 @@ const getDrinksByFourCategories = async (req, res) => {
 	);
 	res.json(result);
 };
+// с ограничением в 20
+// const getDrinksByFourCategories = async (req, res) => {
+// 	const result = await Drinks.aggregate([
+// 	  {
+// 		$match: {
+// 		  $or: [
+// 			{ category: 'Ordinary Drink' },
+// 			{ category: 'Cocktail' },
+// 			{ category: 'Shake' },
+// 			{ category: 'Other/Unknown' },
+// 		  ],
+// 		},
+// 	  },
+// 	  {
+// 		$group: {
+// 		  _id: '$category',
+// 		  drinks: { $push: { drink: '$drink', drinkThumb: '$drinkThumb' } },
+// 		},
+// 	  },
+// 	  {
+// 		$project: {
+// 		  _id: 0,
+// 		  category: '$_id',
+// 		  drinks: { $slice: ['$drinks', 20] }, // обмеження до 20 елементів на кожну категорію
+// 		},
+// 	  },
+// 	]);
+  
+// 	res.json(result);
+//   };
+
 const getOneDrinkById = async (req, res) => {
 	const { id } = req.params;
 	const result = await Drinks.findById(id).exec();

@@ -40,7 +40,6 @@ const authSchema = Schema(
     subscriptionEmail: {
       type: String,
       match: emailRegexp,
-      required: [true, "Email is required"],
       unique: true,
     },
   },

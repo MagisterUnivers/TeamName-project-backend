@@ -100,17 +100,21 @@ const refresh = async (req, res) => {
 
 const subscription = async (req, res) => {
 	const { _id, subscriptionEmail: currentSubscriptionEmail } = req.user;
-	const { email:newSubscriptionEmail } = req.body;
-	if (currentSubscriptionEmail === '') {
+	const { email: newSubscriptionEmail } = req.body;
+	// is User with req email exists
+	const user = await Users.findOne({ subscriptionEmail: newSubscriptionEmail });
+	if (user && user._id.toString() !== _id.toString()) {
+		throw HttpError(409, 'Subscription email already in use by another user!')
+	}
+	else if (currentSubscriptionEmail === '') {
 		await Users.findByIdAndUpdate(_id, { subscriptionEmail: newSubscriptionEmail });
 		res.status(200).json({
 			message: "You successfully subscribed on our newsletter",
 			subscriptionEmail: newSubscriptionEmail,
     });
-
 	}
 	else {
-		throw HttpError(400, `You already subscribed. Email for newsletter is ${currentSubscriptionEmail}`);
+		throw HttpError(409, `You already subscribed. Email for newsletter is ${currentSubscriptionEmail}`);
 	}
 };
 

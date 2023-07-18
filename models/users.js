@@ -39,8 +39,7 @@ const authSchema = Schema(
     token: String,
     subscriptionEmail: {
       type: String,
-      match: emailRegexp,
-      unique: true,
+      default: ""
     },
   },
   { versionKey: false, timestamps: true }

@@ -117,9 +117,10 @@ const addOwnDrink = async (req, res) => {
 		await fs.rename(oldPath, newPath);
 		drinkThumb = path.join('drinksImg', filename);
 	}
-
+    const ingredients = JSON.parse(req.body.ingredients);
+	console.log(ingredients);
 	const { _id: owner } = req.user;
-	const result = await Drinks.create({ ...req.body, owner, drinkThumb });
+	const result = await Drinks.create({ ...req.body, ingredients,  owner, drinkThumb });
 	res.status(201).json(result);
 };
 

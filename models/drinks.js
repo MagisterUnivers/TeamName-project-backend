@@ -27,7 +27,7 @@ const drinksSchema = Schema(
       type: String,
     },
     ingredients: {
-      type: [Object],
+      type: String,
       // required: true,
     },
     about: {

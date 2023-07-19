@@ -76,7 +76,7 @@ const logout = async (req, res) => {
 };
 
 const current = async (req, res) => {
-	const { email, _id } = req.user;
+	const { email, _id, name, theme, subscriptionEmail } = req.user;
 	// const { authorization } = req.headers;
 	// const UPDtoken = authorization.split(' ');
 
@@ -85,17 +85,23 @@ const current = async (req, res) => {
 	// const result = await Users.findOne({ token: UPDtoken[1] });
 	// console.log(result);
 
+	// store to redux everything about user
+
 	res.json({
 		email,
-		_id
+		_id,
+		name,
+		theme,
+		subscriptionEmail
 	});
 };
 
 const refresh = async (req, res) => {
-	const { token } = req.headers;
-	const user = await Users.findOne(token);
-	await Users.findByIdAndUpdate(user, { token: token });
-	res.json({ token });
+	const { authorization } = req.headers;
+	const UPDtoken = authorization.split(' ');
+	const user = await Users.findOne({ token: UPDtoken[1] });
+	await Users.findByIdAndUpdate(user, { token: UPDtoken[1] });
+	res.json({ token: UPDtoken[1] });
 };
 
 const subscription = async (req, res) => {

@@ -42,6 +42,37 @@ const getDrinksByFourCategories = async (req, res) => {
 	);
 	res.json(result);
 };
+// с ограничением в 20
+// const getDrinksByFourCategories = async (req, res) => {
+// 	const result = await Drinks.aggregate([
+// 	  {
+// 		$match: {
+// 		  $or: [
+// 			{ category: 'Ordinary Drink' },
+// 			{ category: 'Cocktail' },
+// 			{ category: 'Shake' },
+// 			{ category: 'Other/Unknown' },
+// 		  ],
+// 		},
+// 	  },
+// 	  {
+// 		$group: {
+// 		  _id: '$category',
+// 		  drinks: { $push: { drink: '$drink', _id: '_id', drinkThumb: '$drinkThumb' } },
+// 		},
+// 	  },
+// 	  {
+// 		$project: {
+// 		  _id: 0,
+// 		  category: '$_id',
+// 		  drinks: { $slice: ['$drinks', 20] }, // обмеження до 20 елементів на кожну категорію
+// 		},
+// 	  },
+// 	]);
+  
+// 	res.json(result);
+//   };
+
 const getOneDrinkById = async (req, res) => {
 	const { id } = req.params;
 	const result = await Drinks.findById(id).exec();
@@ -103,7 +134,7 @@ const getAllOwnDrinks = async (req, res) => {
 		{ owner },
 		'drink drinkThumb category ingredients about',
 		{ skip, limit }
-	).populate('owner', 'name email');
+	).populate('owner', 'name email').sort({createdAt: -1});
 	const totalHits = await Drinks.find({ owner }).count();
 	const result = { cocktails, totalHits, page };
 	res.json(result);
@@ -117,9 +148,10 @@ const addOwnDrink = async (req, res) => {
 		await fs.rename(oldPath, newPath);
 		drinkThumb = path.join('drinksImg', filename);
 	}
-
+    const ingredients = JSON.parse(req.body.ingredients);
+	console.log(ingredients);
 	const { _id: owner } = req.user;
-	const result = await Drinks.create({ ...req.body, owner, drinkThumb });
+	const result = await Drinks.create({ ...req.body, ingredients,  owner, drinkThumb });
 	res.status(201).json(result);
 };
 

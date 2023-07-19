@@ -25,6 +25,11 @@ const drinkSchema = Joi.object({
   .messages({
     "any.required": 'Missing required "about" field',
   }),
+  ingredients: Joi.string()
+  // .required()
+  .messages({
+    "any.required": 'Missing required "ingredients" field',
+  }),
 });
 
 // const updateFavoriteSchema = Joi.object({

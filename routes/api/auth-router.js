@@ -37,12 +37,7 @@ authRouter.get('/verify/:verificationToken', usersController.verify);
 
 authRouter.post('/logout', authenticate, usersController.logout);
 
-authRouter.patch(
-  "/subscription",
-  authenticate,
-  validateBody(schemas.userEmailSchema),
-  usersController.subscription
-);
+authRouter.patch('/subscribe', authenticate, usersController.subscription);
 
 authRouter.patch(
 	'/theme',

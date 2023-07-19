@@ -17,7 +17,7 @@ const limits = {
 	fileSize: 1024 * 1024
 };
 
-const mimetypeWhitelist = ['image/jpeg', 'image/png'];
+const mimetypeWhitelist = ['image/jpeg', 'image/png', "image/svg+xml"];
 
 const fileFilter = (req, file, cb) => {
 	if (!mimetypeWhitelist.includes(file.mimetype)) {

@@ -71,7 +71,7 @@ const logout = async (req, res) => {
 	await Users.findByIdAndUpdate(_id, { token: '' });
 
 	res.status(204).json({
-		message: 'No Content'
+		message: 'The account has been deleted!'
 	});
 };
 

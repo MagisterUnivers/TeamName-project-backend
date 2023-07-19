@@ -134,7 +134,7 @@ const getAllOwnDrinks = async (req, res) => {
 		{ owner },
 		'drink drinkThumb category ingredients about',
 		{ skip, limit }
-	).populate('owner', 'name email');
+	).populate('owner', 'name email').sort({createdAt: -1});
 	const totalHits = await Drinks.find({ owner }).count();
 	const result = { cocktails, totalHits, page };
 	res.json(result);

@@ -5,5 +5,5 @@ const cloudinary = require('./cloudinary')
 module.exports = {
 	HttpError,
 	handleMongooseError,
-	cloudinary
+	cloudinary,
 };

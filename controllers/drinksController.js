@@ -1,8 +1,6 @@
 const { ctrlWrapper } = require('../decorators');
-const { HttpError } = require('../helpers');
-const path = require('path');
+const { HttpError, cloudinary } = require('../helpers');
 const fs = require('fs/promises');
-const drinksImgDir = path.resolve('public', 'drinksImg');
 
 const Drinks = require('../models/drinks');
 const Categories = require('../models/categories');
@@ -143,16 +141,16 @@ const getAllOwnDrinks = async (req, res) => {
 };
 
 const addOwnDrink = async (req, res) => {
-	// // Change avatars dir to "avatars"
-	let drinkThumb = ''; // base path to load into cloudinary
+	let drinkThumb = '';
 	if (req.file) {
-		const { path: oldPath, filename } = req.file;
-		const newPath = path.join(drinksImgDir, filename);
-		await fs.rename(oldPath, newPath);
-		drinkThumb = path.join('drinksImg', filename);
+		const { path: filePath } = req.file;
+		const { url } = await cloudinary.uploader.upload(filePath, {
+			folder: 'cocktails'
+		});
+		drinkThumb = url;
+		await fs.unlink(filePath);
 	}
 	const ingredients = JSON.parse(req.body.ingredients);
-	console.log(ingredients);
 	const { _id: owner } = req.user;
 	const result = await Drinks.create({
 		...req.body,
@@ -224,21 +222,6 @@ const getPopular = async (req, res) => {
 	res.json(result);
 };
 
-// Cloudinary
-
-const userAvatarUpload = async (req, res) => {
-	const id = req.user._id;
-	const name = req.body;
-	const data = !req.file ? { avatarURL: req.file.path, name } : { name };
-
-	const result = await Drinks.findByIdAndUpdate(id, data);
-
-	res.json({
-		success: true,
-		file: result.drinkThumb
-	});
-};
-
 module.exports = {
 	getCategoryList: ctrlWrapper(getCategoryList),
 	getOneDrinkById: ctrlWrapper(getOneDrinkById),
@@ -253,6 +236,5 @@ module.exports = {
 	getAllFavoriteDrinks: ctrlWrapper(getAllFavoriteDrinks),
 	addFavoriteDrink: ctrlWrapper(addFavoriteDrink),
 	deleteFavoriteDrink: ctrlWrapper(deleteFavoriteDrink),
-	getPopular: ctrlWrapper(getPopular),
-	userAvatarUpload: ctrlWrapper(userAvatarUpload)
+	getPopular: ctrlWrapper(getPopular)
 };

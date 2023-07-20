@@ -1,8 +1,6 @@
 const { ctrlWrapper } = require('../decorators');
 const { HttpError, cloudinary } = require('../helpers');
-// const path = require('path');
 const fs = require('fs/promises');
-// const drinksImgDir = path.resolve('public', 'drinksImg');
 
 const Drinks = require('../models/drinks');
 const Categories = require('../models/categories');
@@ -143,21 +141,14 @@ const getAllOwnDrinks = async (req, res) => {
 };
 
 const addOwnDrink = async (req, res) => {
-	// // Change avatars dir to "avatars"
-	let drinkThumb = ''; // base path to load into cloudinary
+	let drinkThumb = '';
 	if (req.file) {
 		const {path: filePath} = req.file;
 		const {url} = await cloudinary.uploader.upload(filePath, {
-			folder: "cocktailes"
+			folder: "cocktails"
 		})
-		console.log(url);
 		drinkThumb = url;
 	   await fs.unlink(filePath);
-
-		// const { path: oldPath, filename } = req.file;
-		// const newPath = path.join(drinksImgDir, filename);
-		// await fs.rename(oldPath, newPath);
-		// drinkThumb = path.join('drinksImg', filename);
 	}
 	const ingredients = JSON.parse(req.body.ingredients);
 	const { _id: owner } = req.user;

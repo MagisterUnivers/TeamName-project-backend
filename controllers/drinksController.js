@@ -42,6 +42,37 @@ const getDrinksByFourCategories = async (req, res) => {
 	);
 	res.json(result);
 };
+// с ограничением в 20
+// const getDrinksByFourCategories = async (req, res) => {
+// 	const result = await Drinks.aggregate([
+// 	  {
+// 		$match: {
+// 		  $or: [
+// 			{ category: 'Ordinary Drink' },
+// 			{ category: 'Cocktail' },
+// 			{ category: 'Shake' },
+// 			{ category: 'Other/Unknown' },
+// 		  ],
+// 		},
+// 	  },
+// 	  {
+// 		$group: {
+// 		  _id: '$category',
+// 		  drinks: { $push: { drink: '$drink', _id: '_id', drinkThumb: '$drinkThumb' } },
+// 		},
+// 	  },
+// 	  {
+// 		$project: {
+// 		  _id: 0,
+// 		  category: '$_id',
+// 		  drinks: { $slice: ['$drinks', 20] }, // обмеження до 20 елементів на кожну категорію
+// 		},
+// 	  },
+// 	]);
+
+// 	res.json(result);
+//   };
+
 const getOneDrinkById = async (req, res) => {
 	const { id } = req.params;
 	const result = await Drinks.findById(id).exec();
@@ -103,14 +134,17 @@ const getAllOwnDrinks = async (req, res) => {
 		{ owner },
 		'drink drinkThumb category ingredients about',
 		{ skip, limit }
-	).populate('owner', 'name email');
+	)
+		.populate('owner', 'name email')
+		.sort({ createdAt: -1 });
 	const totalHits = await Drinks.find({ owner }).count();
 	const result = { cocktails, totalHits, page };
 	res.json(result);
 };
 
 const addOwnDrink = async (req, res) => {
-	let drinkThumb = '';
+	// // Change avatars dir to "avatars"
+	let drinkThumb = ''; // base path to load into cloudinary
 	if (req.file) {
 		const {path: filePath} = req.file;
 		const {url} = await cloudinary.uploader.upload(filePath, {
@@ -125,9 +159,14 @@ const addOwnDrink = async (req, res) => {
 		// await fs.rename(oldPath, newPath);
 		// drinkThumb = path.join('drinksImg', filename);
 	}
-    const ingredients = JSON.parse(req.body.ingredients);
+	const ingredients = JSON.parse(req.body.ingredients);
 	const { _id: owner } = req.user;
-	const result = await Drinks.create({ ...req.body, ingredients,  owner, drinkThumb });
+	const result = await Drinks.create({
+		...req.body,
+		ingredients,
+		owner,
+		drinkThumb
+	});
 	res.status(201).json(result);
 };
 
@@ -192,6 +231,21 @@ const getPopular = async (req, res) => {
 	res.json(result);
 };
 
+// Cloudinary
+
+const userAvatarUpload = async (req, res) => {
+	const id = req.user._id;
+	const name = req.body;
+	const data = !req.file ? { avatarURL: req.file.path, name } : { name };
+
+	const result = await Drinks.findByIdAndUpdate(id, data);
+
+	res.json({
+		success: true,
+		file: result.drinkThumb
+	});
+};
+
 module.exports = {
 	getCategoryList: ctrlWrapper(getCategoryList),
 	getOneDrinkById: ctrlWrapper(getOneDrinkById),
@@ -206,5 +260,6 @@ module.exports = {
 	getAllFavoriteDrinks: ctrlWrapper(getAllFavoriteDrinks),
 	addFavoriteDrink: ctrlWrapper(addFavoriteDrink),
 	deleteFavoriteDrink: ctrlWrapper(deleteFavoriteDrink),
-	getPopular: ctrlWrapper(getPopular)
+	getPopular: ctrlWrapper(getPopular),
+	userAvatarUpload: ctrlWrapper(userAvatarUpload)
 };

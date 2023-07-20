@@ -31,9 +31,14 @@ const userThemeSchema = Joi.object({
       "any.required": "{#label} missing required field",
     }),
 });
+const userUpdateSchema = Joi.object({
+	name: Joi.string().pattern(nameRegexp),
+	avatarURL: Joi.string()
+});
 module.exports = {
 	userRegisterSchema,
 	userLoginSchema,
 	userEmailSchema,
 	userThemeSchema,
+	userUpdateSchema
 };

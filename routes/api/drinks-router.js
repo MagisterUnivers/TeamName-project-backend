@@ -19,7 +19,7 @@ router.get('/:category', drinksController.getDrinksByCategory);
 router.post(
 	'/',
 	authenticate,
-	uploadCloud.single('image'),
+	uploadCloud.single('drinkThumb'),
 	drinksController.addOwnDrink
 );
 

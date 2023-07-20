@@ -1,10 +1,10 @@
 const express = require('express');
 const glassController = require('../../controllers/glassController');
-// const authenticate = require('../../middleware/authenticate');
+const authenticate = require('../../middleware/authenticate');
 
 const router = express.Router();
 
-// router.use(authenticate);
+router.use(authenticate);
 
 router.get('/', glassController.getAllGlasses);
 

@@ -69,7 +69,7 @@ const getDrinksByFourCategories = async (req, res) => {
 // 		},
 // 	  },
 // 	]);
-  
+
 // 	res.json(result);
 //   };
 
@@ -134,24 +134,32 @@ const getAllOwnDrinks = async (req, res) => {
 		{ owner },
 		'drink drinkThumb category ingredients about',
 		{ skip, limit }
-	).populate('owner', 'name email').sort({createdAt: -1});
+	)
+		.populate('owner', 'name email')
+		.sort({ createdAt: -1 });
 	const totalHits = await Drinks.find({ owner }).count();
 	const result = { cocktails, totalHits, page };
 	res.json(result);
 };
 
 const addOwnDrink = async (req, res) => {
-	let drinkThumb = '';
+	// // Change avatars dir to "avatars"
+	let drinkThumb = ''; // base path to load into cloudinary
 	if (req.file) {
 		const { path: oldPath, filename } = req.file;
 		const newPath = path.join(drinksImgDir, filename);
 		await fs.rename(oldPath, newPath);
 		drinkThumb = path.join('drinksImg', filename);
 	}
-    const ingredients = JSON.parse(req.body.ingredients);
+	const ingredients = JSON.parse(req.body.ingredients);
 	console.log(ingredients);
 	const { _id: owner } = req.user;
-	const result = await Drinks.create({ ...req.body, ingredients,  owner, drinkThumb });
+	const result = await Drinks.create({
+		...req.body,
+		ingredients,
+		owner,
+		drinkThumb
+	});
 	res.status(201).json(result);
 };
 
@@ -216,6 +224,21 @@ const getPopular = async (req, res) => {
 	res.json(result);
 };
 
+// Cloudinary
+
+const userAvatarUpload = async (req, res) => {
+	const id = req.user._id;
+	const name = req.body;
+	const data = !req.file ? { avatarURL: req.file.path, name } : { name };
+
+	const result = await Drinks.findByIdAndUpdate(id, data);
+
+	res.json({
+		success: true,
+		file: result.drinkThumb
+	});
+};
+
 module.exports = {
 	getCategoryList: ctrlWrapper(getCategoryList),
 	getOneDrinkById: ctrlWrapper(getOneDrinkById),
@@ -230,5 +253,6 @@ module.exports = {
 	getAllFavoriteDrinks: ctrlWrapper(getAllFavoriteDrinks),
 	addFavoriteDrink: ctrlWrapper(addFavoriteDrink),
 	deleteFavoriteDrink: ctrlWrapper(deleteFavoriteDrink),
-	getPopular: ctrlWrapper(getPopular)
+	getPopular: ctrlWrapper(getPopular),
+	userAvatarUpload: ctrlWrapper(userAvatarUpload)
 };

@@ -1,8 +1,6 @@
 const { ctrlWrapper } = require('../decorators');
 const { HttpError, cloudinary } = require('../helpers');
-// const path = require('path');
 const fs = require('fs/promises');
-// const drinksImgDir = path.resolve('public', 'drinksImg');
 
 const Drinks = require('../models/drinks');
 const Categories = require('../models/categories');
@@ -146,13 +144,13 @@ const addOwnDrink = async (req, res) => {
 	// // Change avatars dir to "avatars"
 	let drinkThumb = ''; // base path to load into cloudinary
 	if (req.file) {
-		const {path: filePath} = req.file;
-		const {url} = await cloudinary.uploader.upload(filePath, {
-			folder: "cocktailes"
-		})
+		const { path: filePath } = req.file;
+		const { url } = await cloudinary.uploader.upload(filePath, {
+			folder: 'cocktailes'
+		});
 		console.log(url);
 		drinkThumb = url;
-	   await fs.unlink(filePath);
+		await fs.unlink(filePath);
 
 		// const { path: oldPath, filename } = req.file;
 		// const newPath = path.join(drinksImgDir, filename);
@@ -231,21 +229,6 @@ const getPopular = async (req, res) => {
 	res.json(result);
 };
 
-// Cloudinary
-
-const userAvatarUpload = async (req, res) => {
-	const id = req.user._id;
-	const name = req.body;
-	const data = !req.file ? { avatarURL: req.file.path, name } : { name };
-
-	const result = await Drinks.findByIdAndUpdate(id, data);
-
-	res.json({
-		success: true,
-		file: result.drinkThumb
-	});
-};
-
 module.exports = {
 	getCategoryList: ctrlWrapper(getCategoryList),
 	getOneDrinkById: ctrlWrapper(getOneDrinkById),
@@ -260,6 +243,5 @@ module.exports = {
 	getAllFavoriteDrinks: ctrlWrapper(getAllFavoriteDrinks),
 	addFavoriteDrink: ctrlWrapper(addFavoriteDrink),
 	deleteFavoriteDrink: ctrlWrapper(deleteFavoriteDrink),
-	getPopular: ctrlWrapper(getPopular),
-	userAvatarUpload: ctrlWrapper(userAvatarUpload)
+	getPopular: ctrlWrapper(getPopular)
 };

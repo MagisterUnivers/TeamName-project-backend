@@ -5,7 +5,6 @@ const drinksController = require('../../controllers/drinksController');
 // const isBodyEmpty = require('../../middleware/isBodyEmpty');
 const idValidation = require('../../middleware/idValidation');
 const authenticate = require('../../middleware/authenticate');
-const uploadCloud = require('../../middleware/uploadMiddleware');
 
 const router = express.Router();
 
@@ -16,13 +15,5 @@ router.get('/main-page', drinksController.getDrinksByFourCategories);
 // here(below) is an extra id. It should be somehow eliminated.
 router.get('/id/:id', idValidation, drinksController.getOneDrinkById);
 router.get('/:category', drinksController.getDrinksByCategory);
-router.post(
-	'/',
-	authenticate,
-	uploadCloud.single('cocktails'),
-	drinksController.addOwnDrink
-);
-
-// router.get('/popular', drinksController.getPopular);
 
 module.exports = router;

@@ -6,7 +6,7 @@ const categoryList = [
 	'Cocoa',
 	'Shot',
 	'Coffee/Tea',
-	'Homemade Liqueur',
+	'H/m Liqueur',
 	'Punch/Party Drink',
 	'Beer',
 	'Soft Drink'

@@ -8,6 +8,7 @@ require('dotenv').config();
 
 const { SECRET_KEY, BASE_URL } = process.env;
 
+const saveUserAvatar = require('../helpers');
 const { ctrlWrapper } = require('../decorators');
 const emailVerify = require('../helpers/emailVerify');
 const { HttpError, cloudinary } = require('../helpers');

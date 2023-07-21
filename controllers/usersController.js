@@ -1,8 +1,8 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const jimp = require("jimp");
-const fs = require("fs/promises");
-const path = require("path");
+// const jimp = require("jimp");
+// const fs = require("fs/promises");
+// const path = require("path");
 const { nanoid } = require("nanoid");
 require("dotenv").config();
 
@@ -10,10 +10,11 @@ const { SECRET_KEY, BASE_URL } = process.env;
 
 const { ctrlWrapper } = require("../decorators");
 const emailVerify = require("../helpers/emailVerify");
-const { HttpError, cloudinary } = require("../helpers");
+const { HttpError } = require("../helpers");
 const Users = require("../models/users");
+const { saveUserAvatar } = require("../helpers/avatarHelpers");
 
-const avatarDir = path.resolve("public", "avatars");
+// const avatarDir = path.resolve("public", "avatars");
 
 //
 
@@ -233,7 +234,7 @@ module.exports = {
   logout: ctrlWrapper(logout),
   current: ctrlWrapper(current),
   subscription: ctrlWrapper(subscription),
-  avatars: ctrlWrapper(avatars),
+//   avatars: ctrlWrapper(avatars),
   verify: ctrlWrapper(verify),
   resendVerifyEmail: ctrlWrapper(resendVerifyEmail),
   updateTheme: ctrlWrapper(updateTheme),

@@ -16,7 +16,4 @@ router.get('/main-page', drinksController.getDrinksByFourCategories);
 router.get('/id/:id', idValidation, drinksController.getOneDrinkById);
 router.get('/:category', drinksController.getDrinksByCategory);
 
-
-
-
 module.exports = router;

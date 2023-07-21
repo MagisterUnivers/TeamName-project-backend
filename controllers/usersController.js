@@ -99,8 +99,13 @@ const refresh = async (req, res) => {
 	const { authorization } = req.headers;
 	const UPDtoken = authorization.split(' ');
 	const user = await Users.findOne({ token: UPDtoken[1] });
+	if (!user)
+		return res
+			.status(401)
+			.json({ error: 'Invalid token. No user with such token' });
+
 	await Users.findByIdAndUpdate(user, { token: UPDtoken[1] });
-	res.json({ token: UPDtoken[1] });
+	res.json({ token: user.token });
 };
 
 const subscription = async (req, res) => {

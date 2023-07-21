@@ -234,7 +234,6 @@ module.exports = {
   logout: ctrlWrapper(logout),
   current: ctrlWrapper(current),
   subscription: ctrlWrapper(subscription),
-//   avatars: ctrlWrapper(avatars),
   verify: ctrlWrapper(verify),
   resendVerifyEmail: ctrlWrapper(resendVerifyEmail),
   updateTheme: ctrlWrapper(updateTheme),

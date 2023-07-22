@@ -41,7 +41,7 @@ const getDrinksByCategory = async (req, res) => {
 // 		res.json(result);
 // };
 
-// с ограничением в 20
+// с ограничением до 20
 
 const getDrinksByFourCategories = async (req, res) => {
 	const result = await Drinks.aggregate([
@@ -58,7 +58,7 @@ const getDrinksByFourCategories = async (req, res) => {
 	  {
 		$group: {
 		  _id: '$category',
-		  drinks: { $push: { drink: '$drink', _id: '_id', drinkThumb: '$drinkThumb',category: '$category' } },
+		  drinks: { $push: { drink: '$drink', _id: '$_id', drinkThumb: '$drinkThumb',category: '$category' } },
 				
 
 		},

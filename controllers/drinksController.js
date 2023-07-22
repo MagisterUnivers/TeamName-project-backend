@@ -26,50 +26,56 @@ const getDrinksByCategory = async (req, res) => {
 	const result = { cocktails, totalHits, page };
 	res.json(result);
 };
-const getDrinksByFourCategories = async (req, res) => {
-	const result = await Drinks.find(
-		{
-			$or: [
-				{ category: 'Ordinary Drink' },
-				{ category: 'Cocktail' },
-				{ category: 'Shake' },
-				{ category: 'Other/Unknown' }
-			]
-		},
-		'drink drinkThumb category'
-	);
-	res.json(result);
-};
-// с ограничением в 20
 // const getDrinksByFourCategories = async (req, res) => {
-// 	const result = await Drinks.aggregate([
-// 	  {
-// 		$match: {
-// 		  $or: [
-// 			{ category: 'Ordinary Drink' },
-// 			{ category: 'Cocktail' },
-// 			{ category: 'Shake' },
-// 			{ category: 'Other/Unknown' },
-// 		  ],
+// 	const result = await Drinks.find(
+// 		{
+// 			$or: [
+// 				{ category: 'Ordinary Drink' },
+// 				{ category: 'Cocktail' },
+// 				{ category: 'Shake' },
+// 				{ category: 'Other/Unknown' }
+// 			]
 // 		},
-// 	  },
-// 	  {
-// 		$group: {
-// 		  _id: '$category',
-// 		  drinks: { $push: { drink: '$drink', _id: '_id', drinkThumb: '$drinkThumb' } },
-// 		},
-// 	  },
-// 	  {
-// 		$project: {
-// 		  _id: 0,
-// 		  category: '$_id',
-// 		  drinks: { $slice: ['$drinks', 20] }, // обмеження до 20 елементів на кожну категорію
-// 		},
-// 	  },
-// 	]);
+// 		'drink drinkThumb category'
+// 	);
+// 		res.json(result);
+// };
 
-// 	res.json(result);
-//   };
+// с ограничением в 20
+
+const getDrinksByFourCategories = async (req, res) => {
+	const result = await Drinks.aggregate([
+	  {
+		$match: {
+		  $or: [
+			{ category: 'Ordinary Drink' },
+			{ category: 'Cocktail' },
+			{ category: 'Shake' },
+			{ category: 'Other/Unknown' },
+		  ],
+		},
+	  },
+	  {
+		$group: {
+		  _id: '$category',
+		  drinks: { $push: { drink: '$drink', _id: '_id', drinkThumb: '$drinkThumb',category: '$category' } },
+				
+
+		},
+	  },
+	  {
+		$project: {
+		  _id: 0,
+		  category: '$_id',
+		  drinks: { $slice: ['$drinks', 20] }, // обмеження до 20 елементів на кожну категорію
+		},
+	  },
+	]);
+const finalResult= result.map(o => o.drinks)
+.reduce((a1, a2) => a1.concat(a2), []);
+	res.json(finalResult);
+  };
+
 
 const getOneDrinkById = async (req, res) => {
 	const { id } = req.params;

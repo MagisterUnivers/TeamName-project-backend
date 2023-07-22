@@ -41,7 +41,7 @@ const getDrinksByCategory = async (req, res) => {
 // 		res.json(result);
 // };
 
-// с ограничением в 20
+// с ограничением до 20
 
 const getDrinksByFourCategories = async (req, res) => {
 	const result = await Drinks.aggregate([

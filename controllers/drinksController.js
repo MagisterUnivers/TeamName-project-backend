@@ -58,7 +58,7 @@ const getDrinksByFourCategories = async (req, res) => {
 	  {
 		$group: {
 		  _id: '$category',
-		  drinks: { $push: { drink: '$drink', _id: '$_id', drinkThumb: '$drinkThumb',category: '$category' } },
+		  drinks: { $push: { drink: '$drink', _id: '$_i', drinkThumb: '$drinkThumb',category: '$category' } },
 				
 
 		},

@@ -171,7 +171,7 @@ const deleteOwnDrink = async (req, res) => {
 	const { id } = req.params;
 	const result = await Drinks.findByIdAndDelete(id);
 	if (!result) throw HttpError(404, `Cocktail with id=${id} was not found`);
-	res.json({ message: 'Cocktail was deleted' });
+	res.json(result);
 };
 
 // Favorites

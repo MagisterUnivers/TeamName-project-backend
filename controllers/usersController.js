@@ -3,15 +3,15 @@ const jwt = require('jsonwebtoken');
 const jimp = require('jimp');
 const fs = require('fs/promises');
 const path = require('path');
-// const gravatar = require('gravatar');
 const { nanoid } = require('nanoid');
 require('dotenv').config();
 
 const { SECRET_KEY, BASE_URL } = process.env;
 
+const saveUserAvatar = require('../helpers');
 const { ctrlWrapper } = require('../decorators');
 const emailVerify = require('../helpers/emailVerify');
-const { HttpError } = require('../helpers');
+const { HttpError, cloudinary } = require('../helpers');
 const Users = require('../models/users');
 
 const avatarDir = path.resolve('public', 'avatars');
@@ -70,8 +70,8 @@ const logout = async (req, res) => {
 
 	await Users.findByIdAndUpdate(_id, { token: '' });
 
-	res.status(204).json({
-		message: 'No Content'
+	res.status(200).json({
+		message: 'Token has been deleted!'
 	});
 };
 
@@ -100,8 +100,13 @@ const refresh = async (req, res) => {
 	const { authorization } = req.headers;
 	const UPDtoken = authorization.split(' ');
 	const user = await Users.findOne({ token: UPDtoken[1] });
+	if (!user)
+		return res
+			.status(401)
+			.json({ error: 'Invalid token. No user with such token' });
+
 	await Users.findByIdAndUpdate(user, { token: UPDtoken[1] });
-	res.json({ token: UPDtoken[1] });
+	res.json({ token: user.token });
 };
 
 const subscription = async (req, res) => {
@@ -110,17 +115,20 @@ const subscription = async (req, res) => {
 	// is User with req email exists
 	const user = await Users.findOne({ subscriptionEmail: newSubscriptionEmail });
 	if (user && user._id.toString() !== _id.toString()) {
-		throw HttpError(409, 'Subscription email already in use by another user!')
-	}
-	else if (currentSubscriptionEmail === '') {
-		await Users.findByIdAndUpdate(_id, { subscriptionEmail: newSubscriptionEmail });
+		throw HttpError(409, 'Subscription email already in use by another user!');
+	} else if (currentSubscriptionEmail === '') {
+		await Users.findByIdAndUpdate(_id, {
+			subscriptionEmail: newSubscriptionEmail
+		});
 		res.status(200).json({
-			message: "You successfully subscribed on our newsletter",
-			subscriptionEmail: newSubscriptionEmail,
-    });
-	}
-	else {
-		throw HttpError(409, `You already subscribed. Email for newsletter is ${currentSubscriptionEmail}`);
+			message: 'You successfully subscribed on our newsletter',
+			subscriptionEmail: newSubscriptionEmail
+		});
+	} else {
+		throw HttpError(
+			409,
+			`You already subscribed. Email for newsletter is ${currentSubscriptionEmail}`
+		);
 	}
 };
 
@@ -135,21 +143,41 @@ const updateTheme = async (req, res) => {
 	res.json({ theme: newTheme });
 };
 
-const avatars = async (req, res) => {
-	// move image
-	const { path: oldPath, filename } = req.file;
-	const newPath = path.join(avatarDir, filename);
-	await fs.rename(oldPath, newPath);
-	//
-	// resize image
-	const image = await jimp.read(newPath);
-	await image.resize(250, 250).write(newPath);
-	//
-	const avatarURL = path.join('avatars', filename);
+// const avatars = async (req, res) => {
+//   // move image
+//   const { path: filename } = req.file;
+//   const newPath = path.join(avatarDir, filename);
+//   await fs.rename(oldPath, newPath);
+//   //
+//   // resize image
+//   const image = await jimp.read(newPath);
+//   await image.resize(250, 250).write(newPath);
+//   //
+//   const avatarURL = path.join("avatars", filename);
 
-	req.user.avatarURL = avatarURL;
-	await req.user.updateOne({ avatarURL });
-	res.json(req.user.avatarURL);
+//   req.user.avatarURL = avatarURL;
+//   await req.user.updateOne({ avatarURL });
+//   res.json(req.user.avatarURL);
+// };
+
+const updateUser = async (req, res) => {
+	const { name, avatarURL } = req.body;
+	const updatedFields = {};
+
+	if (avatarURL) {
+		const newAvatarURL = await saveUserAvatar(req, res);
+		updatedFields.avatarURL = newAvatarURL;
+	}
+
+	if (name) {
+		updatedFields.name = name;
+	}
+
+	if (Object.keys(updatedFields).length > 0) {
+		await req.user.updateOne(updatedFields);
+	}
+
+	res.json(updatedFields);
 };
 
 const verify = async (req, res) => {
@@ -212,9 +240,10 @@ module.exports = {
 	logout: ctrlWrapper(logout),
 	current: ctrlWrapper(current),
 	subscription: ctrlWrapper(subscription),
-	avatars: ctrlWrapper(avatars),
+	avatars: ctrlWrapper(updateUser),
 	verify: ctrlWrapper(verify),
 	resendVerifyEmail: ctrlWrapper(resendVerifyEmail),
 	updateTheme: ctrlWrapper(updateTheme),
-	refresh: ctrlWrapper(refresh)
+	refresh: ctrlWrapper(refresh),
+	updateUser: ctrlWrapper(updateUser)
 };

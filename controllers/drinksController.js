@@ -224,7 +224,33 @@ const deleteFavoriteDrink = async (req, res) => {
 // Popular
 
 const getPopular = async (req, res) => {
-	const result = await Drinks.find().sort({ favorite: -1 }).limit(4);
+	const result = await Drinks.aggregate([
+		{
+		  $unwind: "$favorite"
+		},
+		{
+		  $group: {
+			_id: { _id: "$_id", drink: "$drink", about: "$about", drinkThumb: "$drinkThumb" },
+			favoriteCount: { $sum: 1 }
+		  }
+		},
+		{
+		  $sort: { favoriteCount: -1 }
+		},
+		{
+		  $limit: 4
+		},
+		{
+		  $project: {
+			_id: "$_id._id",
+            drink: "$_id.drink",
+			about: "$_id.about",
+			drinkThumb: "$_id.drinkThumb",
+			favoriteCount: 1,
+		  }
+		}
+	  ]);
+	  
 	res.json(result);
 };
 

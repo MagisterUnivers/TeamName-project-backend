@@ -1,22 +1,14 @@
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-// const jimp = require("jimp");
-// const fs = require("fs/promises");
-// const path = require("path");
-const { nanoid } = require("nanoid");
-require("dotenv").config();
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const { nanoid } = require('nanoid');
 
 const { SECRET_KEY, BASE_URL } = process.env;
 
-const { ctrlWrapper } = require("../decorators");
-const emailVerify = require("../helpers/emailVerify");
-const { HttpError } = require("../helpers");
-const Users = require("../models/users");
-const { saveUserAvatar } = require("../helpers/avatarHelpers");
-
-// const avatarDir = path.resolve("public", "avatars");
-
-//
+const {saveUserAvatar } = require('../helpers');
+const { ctrlWrapper } = require('../decorators');
+const emailVerify = require('../helpers/emailVerify');
+const { HttpError} = require('../helpers');
+const Users = require('../models/users');
 
 const register = async (req, res) => {
   const { email, password } = req.body;

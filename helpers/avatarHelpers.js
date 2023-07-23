@@ -1,9 +1,9 @@
 const fs = require("fs/promises");
 const path = require("path");
 const jimp = require("jimp");
-const { cloudinary } = require(".");
+const cloudinary = require("./cloudinary");
 
-const tmpDir = path.resolve("tmp");
+const tmpDir = path.resolve("temp");
 
 const saveUserAvatar = async (req, res) => {
   const { name } = req.body;
@@ -44,6 +44,4 @@ const saveUserAvatar = async (req, res) => {
 
   res.json(updatedFields);
 };
-module.exports = {
-  saveUserAvatar,
-};
+module.exports = saveUserAvatar;

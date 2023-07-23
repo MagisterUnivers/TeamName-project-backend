@@ -1,22 +1,15 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const jimp = require('jimp');
-const fs = require('fs/promises');
-const path = require('path');
 const { nanoid } = require('nanoid');
 require('dotenv').config();
 
 const { SECRET_KEY, BASE_URL } = process.env;
 
-const saveUserAvatar = require('../helpers');
+const saveUserAvatar = require('../helpers/avatarHelpers');
 const { ctrlWrapper } = require('../decorators');
 const emailVerify = require('../helpers/emailVerify');
-const { HttpError, cloudinary } = require('../helpers');
+const { HttpError } = require('../helpers');
 const Users = require('../models/users');
-
-const avatarDir = path.resolve('public', 'avatars');
-
-//
 
 const register = async (req, res) => {
 	const { email, password } = req.body;
@@ -76,7 +69,7 @@ const logout = async (req, res) => {
 };
 
 const current = async (req, res) => {
-	const { email, _id, name, theme, subscriptionEmail } = req.user;
+	const { email, _id, name, theme, subscriptionEmail, avatarURL } = req.user;
 	// const { authorization } = req.headers;
 	// const UPDtoken = authorization.split(' ');
 
@@ -92,7 +85,8 @@ const current = async (req, res) => {
 		_id,
 		name,
 		theme,
-		subscriptionEmail
+		subscriptionEmail,
+		avatarURL
 	});
 };
 
@@ -143,28 +137,13 @@ const updateTheme = async (req, res) => {
 	res.json({ theme: newTheme });
 };
 
-// const avatars = async (req, res) => {
-//   // move image
-//   const { path: filename } = req.file;
-//   const newPath = path.join(avatarDir, filename);
-//   await fs.rename(oldPath, newPath);
-//   //
-//   // resize image
-//   const image = await jimp.read(newPath);
-//   await image.resize(250, 250).write(newPath);
-//   //
-//   const avatarURL = path.join("avatars", filename);
-
-//   req.user.avatarURL = avatarURL;
-//   await req.user.updateOne({ avatarURL });
-//   res.json(req.user.avatarURL);
-// };
-
 const updateUser = async (req, res) => {
-	const { name, avatarURL } = req.body;
+	const { name } = req.body;
+	console.log(name);
+	const  file = req.file;
 	const updatedFields = {};
-
-	if (avatarURL) {
+	console.log(file);
+	if (file) {
 		const newAvatarURL = await saveUserAvatar(req, res);
 		updatedFields.avatarURL = newAvatarURL;
 	}
@@ -240,7 +219,7 @@ module.exports = {
 	logout: ctrlWrapper(logout),
 	current: ctrlWrapper(current),
 	subscription: ctrlWrapper(subscription),
-	avatars: ctrlWrapper(updateUser),
+	
 	verify: ctrlWrapper(verify),
 	resendVerifyEmail: ctrlWrapper(resendVerifyEmail),
 	updateTheme: ctrlWrapper(updateTheme),

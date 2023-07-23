@@ -51,7 +51,7 @@ authRouter.patch(
 	authenticate,
 	validateBody(schemas.userUpdateSchema),
 	upload.single('avatarURL'),
-	usersController.avatars
+	usersController.updateUser
 );
 
 // router.post(

@@ -22,7 +22,7 @@ const authSchema = Schema(
       required: [true, "Set password for user"],
     },
     avatarURL: {
-      type: String,
+      // type: String,
     },
     verify: {
       type: Boolean,

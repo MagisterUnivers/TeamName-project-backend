@@ -69,7 +69,7 @@ const logout = async (req, res) => {
 };
 
 const current = async (req, res) => {
-	const { email, _id, name, theme, subscriptionEmail } = req.user;
+	const { email, _id, name, theme, subscriptionEmail, avatarURL } = req.user;
 	// const { authorization } = req.headers;
 	// const UPDtoken = authorization.split(' ');
 
@@ -85,7 +85,8 @@ const current = async (req, res) => {
 		_id,
 		name,
 		theme,
-		subscriptionEmail
+		subscriptionEmail,
+		avatarURL
 	});
 };
 

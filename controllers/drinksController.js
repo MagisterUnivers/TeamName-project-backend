@@ -41,7 +41,7 @@ const getDrinksByCategory = async (req, res) => {
 // 		res.json(result);
 // };
 
-// с ограничением в 20
+// с ограничением до 20
 
 const getDrinksByFourCategories = async (req, res) => {
 	const result = await Drinks.aggregate([
@@ -58,7 +58,7 @@ const getDrinksByFourCategories = async (req, res) => {
 	  {
 		$group: {
 		  _id: '$category',
-		  drinks: { $push: { drink: '$drink', _id: '_id', drinkThumb: '$drinkThumb',category: '$category' } },
+		  drinks: { $push: { drink: '$drink', _id: '$_id', drinkThumb: '$drinkThumb',category: '$category' } },
 				
 
 		},
@@ -171,7 +171,7 @@ const deleteOwnDrink = async (req, res) => {
 	const { id } = req.params;
 	const result = await Drinks.findByIdAndDelete(id);
 	if (!result) throw HttpError(404, `Cocktail with id=${id} was not found`);
-	res.json({ message: 'Cocktail was deleted' });
+	res.json(result);
 };
 
 // Favorites
@@ -224,7 +224,33 @@ const deleteFavoriteDrink = async (req, res) => {
 // Popular
 
 const getPopular = async (req, res) => {
-	const result = await Drinks.find().sort({ favorite: -1 }).limit(4);
+	const result = await Drinks.aggregate([
+		{
+		  $unwind: "$favorite"
+		},
+		{
+		  $group: {
+			_id: { _id: "$_id", drink: "$drink", about: "$about", drinkThumb: "$drinkThumb" },
+			favoriteCount: { $sum: 1 }
+		  }
+		},
+		{
+		  $sort: { favoriteCount: -1 }
+		},
+		{
+		  $limit: 4
+		},
+		{
+		  $project: {
+			_id: "$_id._id",
+            drink: "$_id.drink",
+			about: "$_id.about",
+			drinkThumb: "$_id.drinkThumb",
+			favoriteCount: 1,
+		  }
+		}
+	  ]);
+	  
 	res.json(result);
 };
 

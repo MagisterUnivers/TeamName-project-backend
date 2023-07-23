@@ -138,28 +138,13 @@ const updateTheme = async (req, res) => {
   res.json({ theme: newTheme });
 };
 
-// const avatars = async (req, res) => {
-//   // move image
-//   const { path: filename } = req.file;
-//   const newPath = path.join(avatarDir, filename);
-//   await fs.rename(oldPath, newPath);
-//   //
-//   // resize image
-//   const image = await jimp.read(newPath);
-//   await image.resize(250, 250).write(newPath);
-//   //
-//   const avatarURL = path.join("avatars", filename);
-
-//   req.user.avatarURL = avatarURL;
-//   await req.user.updateOne({ avatarURL });
-//   res.json(req.user.avatarURL);
-// };
 const updateUser = async (req, res) => {
   const { name, avatarURL } = req.body;
   const updatedFields = {};
 
   if (avatarURL) {
     const newAvatarURL = await saveUserAvatar(req, res);
+	console.log(newAvatarURL);
     updatedFields.avatarURL = newAvatarURL;
   }
 

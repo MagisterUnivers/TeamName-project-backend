@@ -7,7 +7,7 @@ const tmpDir = path.resolve("tmp");
 
 const saveUserAvatar = async (req, res) => {
   const { name } = req.body;
-  let avatarURL = null;
+let avatarURL = null;
 
   if (req.file) {
     const { path: filePath } = req.file;
@@ -21,7 +21,7 @@ const saveUserAvatar = async (req, res) => {
     await image.resize(100, 100).writeAsync(tmpImagePath);
 
     const cloudinaryUpload = await cloudinary.uploader.upload(tmpImagePath, {
-      folder: "avatars"
+      folder: "avatars",
     });
 
     avatarURL = cloudinaryUpload.secure_url;

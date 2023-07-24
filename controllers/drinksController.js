@@ -230,7 +230,7 @@ const getPopular = async (req, res) => {
 		},
 		{
 		  $group: {
-			drinks: { id: "$_id", drink: "$drink", about: "$about", drinkThumb: "$drinkThumb" },
+			_id: { _id: "$_id", drink: "$drink", about: "$about", drinkThumb: "$drinkThumb" },
 			favoriteCount: { $sum: 1 }
 		  }
 		},
@@ -242,11 +242,11 @@ const getPopular = async (req, res) => {
 		},
 		{
 		  $project: {
-			id: "$drinks._id",
-            drink: "$drinks.drink",
-			about: "$drinks.about",
-			drinkThumb: "$drinks.drinkThumb",
-			favoriteCount: 1,
+			_id: "$_id._id",
+            drink: "$_id.drink",
+            about: "$_id.about",
+            drinkThumb: "$_id.drinkThumb",
+            favoriteCount: 1,
 		  }
 		}
 	  ]);

@@ -150,12 +150,12 @@
 								"properties": {
 									"username": {
 										"type": "string",
-										"example": "User",
+										"example": "sparfentev1@gmail.com",
 										"description": "The user name for login"
 									},
 									"password": {
 										"type": "string",
-										"example": "User12345",
+										"example": "Pass1234",
 										"description": "The password for login in clear text"
 									}
 								}

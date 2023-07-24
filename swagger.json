@@ -428,12 +428,12 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/UserID"
+									"$ref": "#/components/schemas/UserAvatar"
 								}
 							},
 							"application/xml": {
 								"schema": {
-									"$ref": "#/components/schemas/UserID"
+									"$ref": "#/components/schemas/UserAvatar"
 								}
 							}
 						}
@@ -611,12 +611,13 @@
 				"operationId": "loggoutUser",
 				"parameters": [
 					{
-						"name": "userID",
+						"name": "token",
 						"in": "header",
 						"description": "User that must be logged out.",
 						"required": true,
 						"schema": {
-							"type": "string"
+							"type": "string",
+							"example": "Token123emxe"
 						}
 					}
 				],
@@ -625,17 +626,20 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/UserID"
+								"type": "string",
+								"example": "User is logged out"
 							}
 						},
 						"application/xml": {
 							"schema": {
-								"$ref": "#/components/schemas/UserID"
+								"type": "string",
+								"example": "User is logged out"
 							}
 						},
 						"application/x-www-form-urlencoded": {
 							"schema": {
-								"$ref": "#/components/schemas/UserID"
+								"type": "string",
+								"example": "User is logged out"
 							}
 						}
 					}
@@ -1532,13 +1536,25 @@
 					}
 				}
 			},
-			"AllCategory": {
+			"UserAvatar": {
 				"type": "object",
 				"properties": {
-					"category": {
-						"type": "integer",
+					"avatar": {
+						"type": "string",
 						"format": "int64",
-						"example": ["Category1", "Category2"]
+						"example": "Avatar.url.com"
+					}
+				}
+			},
+			"AllCategory": {
+				"type": "array",
+				"items": {
+					"type": "object",
+					"properties": {
+						"category": {
+							"type": "string",
+							"example": "Category1"
+						}
 					}
 				}
 			},
@@ -1570,16 +1586,16 @@
 						"format": "int64",
 						"example": [
 							{
-								"Popular1": null
+								"Popular1": "objectData"
 							},
 							{
-								"Popular2": null
+								"Popular2": "objectData"
 							},
 							{
-								"Popular3": null
+								"Popular3": "objectData"
 							},
 							{
-								"Popular4": null
+								"Popular4": "objectData"
 							}
 						]
 					}

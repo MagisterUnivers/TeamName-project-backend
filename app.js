@@ -1,9 +1,10 @@
 const express = require('express');
 const logger = require('morgan');
 const cors = require('cors');
+const swaggerUI = require('swagger-ui-express');
+const swaggerDocument = require('./swagger.json');
 require('dotenv').config();
 
-const contactsRouter = require('./routes/api/contactsRoutes');
 const authRouter = require('./routes/api/auth-router');
 const drinksRouter = require('./routes/api/drinks-router');
 const glassRouter = require('./routes/api/glass-router');
@@ -22,8 +23,8 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static('public'));
 
+app.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 app.use('/users', authRouter);
-app.use('/api/contacts', contactsRouter); // homework
 app.use('/recipes', drinksRouter);
 app.use('/search', searchRouter);
 app.use('/ingredients', ingredientsRouter);

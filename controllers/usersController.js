@@ -139,10 +139,8 @@ const updateTheme = async (req, res) => {
 
 const updateUser = async (req, res) => {
 	const { name } = req.body;
-	console.log(name);
-	const  file = req.file;
+	const file = req.file;
 	const updatedFields = {};
-	console.log(file);
 	if (file) {
 		const newAvatarURL = await saveUserAvatar(req, res);
 		updatedFields.avatarURL = newAvatarURL;
@@ -219,7 +217,7 @@ module.exports = {
 	logout: ctrlWrapper(logout),
 	current: ctrlWrapper(current),
 	subscription: ctrlWrapper(subscription),
-	
+
 	verify: ctrlWrapper(verify),
 	resendVerifyEmail: ctrlWrapper(resendVerifyEmail),
 	updateTheme: ctrlWrapper(updateTheme),

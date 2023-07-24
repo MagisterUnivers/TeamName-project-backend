@@ -54,11 +54,4 @@ authRouter.patch(
 	usersController.updateUser
 );
 
-// router.post(
-//   "/",
-//   authMiddleware,
-//   uploadCloud.single("image"),
-//   PetController.petRegister
-// );
-
 module.exports = authRouter;

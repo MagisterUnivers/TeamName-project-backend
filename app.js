@@ -23,7 +23,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static('public'));
 
-app.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
+app.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument)); // backend-route
 app.use('/users', authRouter);
 app.use('/recipes', drinksRouter);
 app.use('/search', searchRouter);

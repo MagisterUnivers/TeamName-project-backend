@@ -1,0 +1,1760 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Swagger CocktailsStore - OpenAPI 3.0",
+    "description": "This is a simple Cocktails Store Server based on the OpenAPI 3.0 specification.  You can find out more about\nSwagger at [https://swagger.io](https://swagger.io). In the third iteration of the cocktails store, we've switched to the design first approach!\nYou can now help us improve the API whether it's by making changes to the definition itself or to the code.\nThat way, with time, we can improve the API in general, and expose some of the new features in OAS3.\n\n\nSome useful links:\n- [Cocktails Store repository](https://github.com/MagisterUnivers/TeamName-project)",
+    "termsOfService": "http://swagger.io/terms/",
+    "contact": {
+      "email": "apiteam@swagger.io"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "version": "1.0.11"
+  },
+  "externalDocs": {
+    "description": "Find out more about Swagger",
+    "url": "http://swagger.io"
+  },
+  "servers": [
+    {
+      "url": "https://cocktails-backend-cwrh.onrender.com"
+    }
+  ],
+  "tags": [
+    {
+      "name": "User",
+      "description": "Operations about user",
+      "externalDocs": {
+        "description": "Find out more",
+        "url": "http://swagger.io"
+      }
+    },
+    {
+      "name": "Favorites",
+      "description": "Operations about favorites recipes",
+      "externalDocs": {
+        "description": "Find out more",
+        "url": "http://swagger.io"
+      }
+    },
+    {
+      "name": "Own",
+      "description": "Operations about own recipes",
+      "externalDocs": {
+        "description": "Find out more",
+        "url": "http://swagger.io"
+      }
+    },
+    {
+      "name": "Recipe",
+      "description": "Operations about recipes",
+      "externalDocs": {
+        "description": "Find out more",
+        "url": "http://swagger.io"
+      }
+    },
+    {
+      "name": "Ingredients",
+      "description": "Operations about ingredients",
+      "externalDocs": {
+        "description": "Find out more",
+        "url": "http://swagger.io"
+      }
+    },
+    {
+      "name": "Search",
+      "description": "Operations about search on the website",
+      "externalDocs": {
+        "description": "Find out more",
+        "url": "http://swagger.io"
+      }
+    },
+    {
+      "name": "Popular",
+      "description": "Operations about popular recipes",
+      "externalDocs": {
+        "description": "Find out more",
+        "url": "http://swagger.io"
+      }
+    },
+    {
+      "name": "Glass",
+      "description": "Operations about glass in recipes",
+      "externalDocs": {
+        "description": "Find out more",
+        "url": "http://swagger.io"
+      }
+    }
+  ],
+  "paths": {
+    "/users/register": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Register the user in the system",
+        "description": "This can be done only by unregistered user.",
+        "operationId": "registerUser",
+        "requestBody": {
+          "description": "Register user object",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserRegistration"
+              }
+            },
+            "application/xml": {
+              "schema": {
+                "$ref": "#/components/schemas/UserRegistration"
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/UserRegistration"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/login": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Login the user into the system",
+        "description": "This can be done only by an unlogged-in user",
+        "operationId": "loginUser",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "example": "User",
+                    "description": "The user name for login"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "User12345",
+                    "description": "The password for login in clear text"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "headers": {
+              "X-Rate-Limit": {
+                "description": "Calls per hour allowed by the user",
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              },
+              "X-Expires-After": {
+                "description": "Date in UTC when the token expires",
+                "schema": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
+            },
+            "content": {
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserLoginResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserLoginResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid username/password presented"
+          }
+        }
+      }
+    },
+    "/users/current": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Show the info about current user",
+        "description": "This can be done only by logged in user",
+        "operationId": "currentUser",
+        "parameters": [
+          {
+            "name": "sessionToken",
+            "in": "header",
+            "description": "The session token from database",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Tokenerjenc7"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "headers": {
+              "X-Rate-Limit": {
+                "description": "calls per hour allowed by the user",
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              },
+              "X-Expires-After": {
+                "description": "date in UTC when token expires",
+                "schema": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
+            },
+            "content": {
+              "application/xml": {
+                "schema": {
+                  "type": "string",
+                  "example": "Token123cjerncwj"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "example": "Token123cjerncwj"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid userID/Token presented"
+          }
+        }
+      }
+    },
+    "/users/verify": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Verify user email",
+        "description": "This can be done only by logged in user",
+        "operationId": "verifyEmail",
+        "requestBody": {
+          "description": "Verifying users email in the DB",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string",
+                "example": {
+                  "email": "email1231@gmail.com"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "example": "Token123cjerncwj"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "string",
+                  "example": "Token123cjerncwj"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid Token presented"
+          },
+          "404": {
+            "description": "Token not found"
+          },
+          "409": {
+            "description": "User already subscribed"
+          }
+        }
+      }
+    },
+    "/users/verify/{verifycationToken}": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Verify user in DB",
+        "description": "This can be done only by logged in user",
+        "operationId": "verifyByToken",
+        "parameters": [
+          {
+            "name": "verifycationToken",
+            "in": "path",
+            "description": "Token from database. ",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Tokenerjenc7"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "example": "Token123cjerncwj"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "string",
+                  "example": "Token123cjerncwj"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid Token presented"
+          },
+          "404": {
+            "description": "Token not found"
+          },
+          "409": {
+            "description": "User already subscribed"
+          }
+        }
+      }
+    },
+    "/users/update/{userID}": {
+      "patch": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Update user info",
+        "description": "This can be done only by logged in user",
+        "operationId": "updateByID",
+        "parameters": [
+          {
+            "name": "userID",
+            "in": "path",
+            "description": "ID from database. ",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserID"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserID"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+    "/users/update": {
+      "patch": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Update user avatar",
+        "description": "This can be done only by logged in user",
+        "operationId": "updateAvatar",
+        "requestBody": {
+          "description": "Update user avatar in the DB",
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "string",
+                "example": {
+                  "avatarURL": "avatarFile"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserID"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserID"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+    "/users/theme": {
+      "patch": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Update theme update",
+        "description": "This can be done only by logged in user",
+        "operationId": "updateTheme",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "header",
+            "description": "Token from database. ",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "token123cnadjnw"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "example": {
+                    "theme": "theme"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "string",
+                  "example": {
+                    "theme": "theme"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid token supplied"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+    "/users/subscribe": {
+      "patch": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Update user subscription",
+        "description": "This can be done only by logged in user",
+        "operationId": "updateSubscribe",
+        "parameters": [
+          {
+            "name": "userEmail",
+            "in": "query",
+            "description": "Email from database. ",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "andrii123@gmail.com"
+            }
+          },
+          {
+            "name": "token",
+            "in": "header",
+            "description": "Token from database. ",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "token123cnadjnw"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "example": "user subscribed"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "string",
+                  "example": "user subscribed"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid email supplied"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+    "/users/refresh": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Update user token",
+        "description": "This can be done only by logged in user",
+        "operationId": "refreshToken",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "header",
+            "description": "Token from database. ",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "token123cnadjnw"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "example": "User information refreshed"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "string",
+                  "example": "User information refreshed"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid token supplied"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+    "/users/logout": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Logs out user from the system",
+        "description": "This can only be done by the logged in user.",
+        "operationId": "loggoutUser",
+        "parameters": [
+          {
+            "name": "userID",
+            "in": "header",
+            "description": "User that must be logged out.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Logs out user from server",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserID"
+              }
+            },
+            "application/xml": {
+              "schema": {
+                "$ref": "#/components/schemas/UserID"
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/UserID"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserID"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserID"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+    "/recipes/category-list": {
+      "get": {
+        "tags": [
+          "Recipe"
+        ],
+        "summary": "Receive all category list",
+        "description": "This can be done only by logged in user",
+        "operationId": "getAllCategory",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "header",
+            "description": "Token from database. ",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Tokencjnrowern213"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AllCategory"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/AllCategory"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid Token supplied"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+    "/recipes/id/{id}": {
+      "get": {
+        "tags": [
+          "Recipe"
+        ],
+        "summary": "Receive recipe by id",
+        "description": "This can be done only by logged in user",
+        "operationId": "getRecipeById",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "header",
+            "description": "Token from database. ",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Tokencjnrowern213"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id from database. ",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "id23123kmdsf"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Recipe"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Recipe"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid Token supplied"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+    "/recipes/main-page": {
+      "get": {
+        "tags": [
+          "Recipe"
+        ],
+        "summary": "Receive recipe by 4 category for main page",
+        "description": "This can be done only by logged in user",
+        "operationId": "getRecipeBy4Category",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "header",
+            "description": "Token from database. ",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Tokencjnrowern213"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecipesByFourCategory"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecipesByFourCategory"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid Token supplied"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+    "/recipes/{category}": {
+      "get": {
+        "tags": [
+          "Recipe"
+        ],
+        "summary": "Receive recipe by category",
+        "description": "This can be done only by logged in user",
+        "operationId": "getRecipeByCategory",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "header",
+            "description": "Token from database. ",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Tokencjnrowern213"
+            }
+          },
+          {
+            "name": "category",
+            "in": "path",
+            "description": "Category in search params",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Cocktail"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CategoryBySearch"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/CategoryBySearch"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid Token supplied"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+    "/glass/": {
+      "get": {
+        "tags": [
+          "Glass"
+        ],
+        "summary": "Receive all recipe glasses list",
+        "description": "This can be done only by logged in user",
+        "operationId": "getAllGlass",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "header",
+            "description": "Token from database. ",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Tokencjnrowern213"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AllGlass"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/AllGlass"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid Token supplied"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+    "/ingredients/list": {
+      "get": {
+        "tags": [
+          "Ingredients"
+        ],
+        "summary": "Receive all ingredients list",
+        "description": "This can be done only by logged in user",
+        "operationId": "getAllIngredients",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "header",
+            "description": "Token from database. ",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Tokencjnrowern213"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AllIngredients"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/AllIngredients"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid Token supplied"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+    "/ingredients/": {
+      "get": {
+        "tags": [
+          "Ingredients"
+        ],
+        "summary": "Receive ingredient by query",
+        "description": "This can be done only by logged in user",
+        "operationId": "getIngredientByQuery",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "header",
+            "description": "Token from database. ",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Tokencjnrowern213"
+            }
+          },
+          {
+            "name": "title",
+            "in": "query",
+            "description": "Query for ingredient search",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Beer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "example": {
+                    "ingredient": "Beer"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "string",
+                  "example": {
+                    "ingredient": "Beer"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid Token supplied / Invalid ingredient title"
+          },
+          "404": {
+            "description": "User not found / Ingredient not found"
+          }
+        }
+      }
+    },
+    "/favorite/": {
+      "get": {
+        "tags": [
+          "Favorites"
+        ],
+        "summary": "Receive all favorites",
+        "description": "This can be done only by logged in user",
+        "operationId": "getAllFavorites",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "header",
+            "description": "Token from database. ",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Tokencjnrowern213"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Recipe"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Recipe"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid Token supplied"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+    "/favorite/{id}": {
+      "post": {
+        "tags": [
+          "Favorites"
+        ],
+        "summary": "Add to favorites",
+        "description": "This can be done only by logged in user",
+        "operationId": "addToFavorite",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "header",
+            "description": "Token from database. ",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Tokencjnrowern213"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id from database. ",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "id12312nfd"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Recipe"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Recipe"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid Token supplied"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+    "/favorite/:{id}": {
+      "delete": {
+        "tags": [
+          "Favorites"
+        ],
+        "summary": "Remove from favorites",
+        "description": "This can be done only by logged in user",
+        "operationId": "RemoveFromFavorite",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id from database. ",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "id12312nfd"
+            }
+          },
+          {
+            "name": "token",
+            "in": "header",
+            "description": "Token from database. ",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Tokencjnrowern213"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Recipe"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Recipe"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid Token supplied"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+    "/popular-recipe/": {
+      "get": {
+        "tags": [
+          "Popular"
+        ],
+        "summary": "Get 4 popular recipes",
+        "description": "This can be done only by logged in user",
+        "operationId": "get4Popular",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "header",
+            "description": "Token from database. ",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Tokencjnrowern213"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Popular"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Popular"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid Token supplied"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+    "/search/": {
+      "get": {
+        "tags": [
+          "Search"
+        ],
+        "summary": "Get recipes by diffirent querys",
+        "description": "This can be done only by logged in user",
+        "operationId": "searchRecipes",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "header",
+            "description": "Token from database. ",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Tokencjnrowern213"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Recipe"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Recipe"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid Token supplied"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+    "/own/": {
+      "post": {
+        "tags": [
+          "Own"
+        ],
+        "summary": "Add recipe to user profile",
+        "description": "This can be done only by logged in user",
+        "operationId": "addOwnRecipe",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "drink": {
+                    "type": "string",
+                    "example": "Margaryta"
+                  },
+                  "drinkThumb": {
+                    "type": "string",
+                    "example": "cloudinary-secure-url.com"
+                  },
+                  "category": {
+                    "type": "string",
+                    "example": "Cocktail"
+                  },
+                  "glass": {
+                    "type": "string",
+                    "example": "Highball glass"
+                  },
+                  "ingredients": {
+                    "type": "array",
+                    "items": {
+                      "type": "object"
+                    }
+                  },
+                  "about": {
+                    "type": "string",
+                    "example": "Tasty"
+                  },
+                  "owner": {
+                    "type": "string",
+                    "example": "64b02a7db8a0046347a6ff65"
+                  },
+                  "favorite": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "example": []
+                  }
+                },
+                "required": [
+                  "drink",
+                  "category",
+                  "glass",
+                  "ingredients",
+                  "about",
+                  "owner",
+                  "favorite"
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Recipe successfully added",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Recipe successfully added"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Unauthorized - Missing or invalid token"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/own/.": {
+      "get": {
+        "tags": [
+          "Own"
+        ],
+        "summary": "Get all own recipes",
+        "description": "This can be done only by logged in user",
+        "operationId": "getAllOwnRecipes",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "header",
+            "description": "Token from database. ",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Tokencjnrowern213"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {}
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {}
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid Token supplied"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+    "/own/..": {
+      "delete": {
+        "tags": [
+          "Own"
+        ],
+        "summary": "Delete own recipe by id",
+        "description": "This can be done only by logged in user",
+        "operationId": "deleteOwnRecipe",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "header",
+            "description": "Token from database. ",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Tokencjnrowern213"
+            }
+          },
+          {
+            "name": "id",
+            "in": "query",
+            "description": "Own recipe id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "ID123031cfdsc"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "example": "Recipe deleted"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "string",
+                  "example": "Recipe deleted"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid Token supplied / Invalid id provided"
+          },
+          "404": {
+            "description": "User or recipe not found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "UserLoginResponse": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "The authentication token",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
+          },
+          "user": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "example": "User123"
+              },
+              "email": {
+                "type": "string",
+                "example": "User@gmail.com"
+              }
+            },
+            "required": [
+              "name",
+              "email"
+            ]
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "example": "User123"
+              },
+              "email": {
+                "type": "string",
+                "example": "User@gmail.com"
+              }
+            },
+            "required": [
+              "name",
+              "email"
+            ]
+          }
+        }
+      },
+      "UserRegistration": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "User123"
+          },
+          "email": {
+            "type": "string",
+            "example": "User@gmail.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "Aa12345"
+          }
+        },
+        "required": [
+          "name",
+          "email",
+          "password"
+        ]
+      },
+      "UserID": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "example": "UserID10"
+          }
+        }
+      },
+      "AllCategory": {
+        "type": "object",
+        "properties": {
+          "category": {
+            "type": "integer",
+            "format": "int64",
+            "example": [
+              "Category1",
+              "Category2"
+            ]
+          }
+        }
+      },
+      "AllGlass": {
+        "type": "object",
+        "properties": {
+          "Glass": {
+            "type": "integer",
+            "format": "int64",
+            "example": [
+              "Glass1",
+              "Glass2"
+            ]
+          }
+        }
+      },
+      "AllIngredients": {
+        "type": "object",
+        "properties": {
+          "category": {
+            "type": "integer",
+            "format": "int64",
+            "example": [
+              "Ingredients1",
+              "Ingredients2"
+            ]
+          }
+        }
+      },
+      "Popular": {
+        "type": "object",
+        "properties": {
+          "popular": {
+            "type": "integer",
+            "format": "int64",
+            "example": [
+              {
+                "Popular1": null
+              },
+              {
+                "Popular2": null
+              },
+              {
+                "Popular3": null
+              },
+              {
+                "Popular4": null
+              }
+            ]
+          }
+        }
+      },
+      "RecipesByFourCategory": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "category": {
+              "type": "string",
+              "example": "Category 1"
+            },
+            "recipes": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "drink": {
+                    "type": "string",
+                    "example": "Drink 1"
+                  },
+                  "drinkThumb": {
+                    "type": "string",
+                    "example": "URL 1"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "CategoryBySearch": {
+        "type": "object",
+        "properties": {
+          "recipe": {
+            "type": "integer",
+            "format": "int64",
+            "example": "RecipeBySearch"
+          }
+        }
+      },
+      "Recipe": {
+        "type": "object",
+        "properties": {
+          "drink": {
+            "type": "string",
+            "example": "Margaryta"
+          },
+          "drinkThumb": {
+            "type": "string",
+            "example": "cloudinary-secure-url.com"
+          },
+          "category": {
+            "type": "string",
+            "example": "Cocktail"
+          },
+          "glass": {
+            "type": "string",
+            "example": "Highball glass"
+          },
+          "ingredients": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "Ingredient1": {
+                  "type": "string",
+                  "example": "Ingredient 1"
+                },
+                "ingredient2": {
+                  "type": "string",
+                  "example": "Ingredient 2"
+                }
+              }
+            }
+          },
+          "about": {
+            "type": "string",
+            "example": "Tasty"
+          },
+          "owner": {
+            "type": "string",
+            "example": "64b02a7db8a0046347a6ff65"
+          },
+          "favorite": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": []
+          }
+        }
+      }
+    },
+    "requestBodies": {
+      "UserArray": {
+        "description": "List of user object",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "cocktailsstore_auth": {
+        "type": "oauth2",
+        "flows": {
+          "implicit": {
+            "authorizationUrl": "https://cocktails.swagger.io/oauth/authorize",
+            "scopes": {
+              "write:cocktails": "modify cocktails in your account",
+              "read:cocktails": "read your cocktails"
+            }
+          }
+        }
+      },
+      "api_key": {
+        "type": "apiKey",
+        "name": "api_key",
+        "in": "header"
+      }
+    }
+  }
+}

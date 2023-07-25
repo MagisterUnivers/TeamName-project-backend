@@ -148,7 +148,7 @@
 							"schema": {
 								"type": "object",
 								"properties": {
-									"username": {
+									"email": {
 										"type": "string",
 										"example": "sparfentev1@gmail.com",
 										"description": "The user name for login"

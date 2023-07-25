@@ -12,7 +12,9 @@
   static websites. The focus of this test is to showcase understanding of
   fundamentals, including routing, data fetching, and component composition. <br/>
     <a href="https://github.com/MagisterUnivers/TeamName-project/tree/dev"
-  >Link to FrontEnd repository</a>
+  >Link to FrontEnd repository</a><br/>
+   <a href="https://cocktails-backend-cwrh.onrender.com/docs"
+  >Link to Swagger documentation</a>
 </p>
 <br />
 <br />

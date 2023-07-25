@@ -12,27 +12,22 @@ const drinksSchema = Schema(
 		category: {
 			type: String,
 			enum: categoryList
-			// required: true,
 		},
 		glass: {
 			type: String,
 			enum: glassList
-			// required: true,
 		},
 		instructions: {
 			type: String
-			// required: true,
 		},
 		drinkThumb: {
 			type: String
 		},
 		ingredients: {
 			type: Array
-			// required: true,
 		},
 		about: {
 			type: String
-			// required: true,
 		},
 		owner: {
 			type: Schema.Types.ObjectId,

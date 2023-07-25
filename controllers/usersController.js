@@ -70,15 +70,6 @@ const logout = async (req, res) => {
 
 const current = async (req, res) => {
 	const { email, _id, name, theme, subscriptionEmail, avatarURL } = req.user;
-	// const { authorization } = req.headers;
-	// const UPDtoken = authorization.split(' ');
-
-	// const user = await Users.findById('64b25f39a99c3c7857e27058');
-	// console.log(user);
-	// const result = await Users.findOne({ token: UPDtoken[1] });
-	// console.log(result);
-
-	// store to redux everything about user
 
 	res.json({
 		email,
@@ -197,19 +188,6 @@ const resendVerifyEmail = async (req, res) => {
 		message: 'Verification email sent'
 	});
 };
-
-// CLOUDINARY
-
-// userUpdate = async (req, res) => {
-//   const id = req.user._id;
-//   const name = req.body;
-//   const data = !!req.file
-//     ? { avatarURL: req.file.path, name }
-//     : { name };
-
-// await User.findByIdAndUpdate(id, data )
-
-// };
 
 module.exports = {
 	register: ctrlWrapper(register),

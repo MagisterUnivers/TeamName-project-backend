@@ -15,20 +15,6 @@ const nodemailerConfig = {
 
 const transport = nodemailer.createTransport(nodemailerConfig);
 
-// const email = {
-// 	from: UKR_NET_EMAIL,
-// 	to: 'hitomod681@dotvilla.com',
-// 	subject: 'Test email',
-// 	hmtl: `<p>Test email</p>`
-// };
-
-// transport
-// 	.sendMail(email)
-// 	.then(() => {
-// 		console.log('Email send success');
-// 	})
-// 	.catch((error) => console.log(error.message));
-
 const emailVerify = async (data) => {
 	const email = { ...data, from: UKR_NET_EMAIL };
 	await transport.sendMail(email);

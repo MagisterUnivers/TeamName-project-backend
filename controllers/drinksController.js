@@ -26,56 +26,45 @@ const getDrinksByCategory = async (req, res) => {
 	const result = { cocktails, totalHits, page };
 	res.json(result);
 };
-// const getDrinksByFourCategories = async (req, res) => {
-// 	const result = await Drinks.find(
-// 		{
-// 			$or: [
-// 				{ category: 'Ordinary Drink' },
-// 				{ category: 'Cocktail' },
-// 				{ category: 'Shake' },
-// 				{ category: 'Other/Unknown' }
-// 			]
-// 		},
-// 		'drink drinkThumb category'
-// 	);
-// 		res.json(result);
-// };
-
-// с ограничением до 20
 
 const getDrinksByFourCategories = async (req, res) => {
 	const result = await Drinks.aggregate([
-	  {
-		$match: {
-		  $or: [
-			{ category: 'Ordinary Drink' },
-			{ category: 'Cocktail' },
-			{ category: 'Shake' },
-			{ category: 'Other/Unknown' },
-		  ],
+		{
+			$match: {
+				$or: [
+					{ category: 'Ordinary Drink' },
+					{ category: 'Cocktail' },
+					{ category: 'Shake' },
+					{ category: 'Other/Unknown' }
+				]
+			}
 		},
-	  },
-	  {
-		$group: {
-		  _id: '$category',
-		  drinks: { $push: { drink: '$drink', _id: '$_id', drinkThumb: '$drinkThumb',category: '$category' } },
-				
-
+		{
+			$group: {
+				_id: '$category',
+				drinks: {
+					$push: {
+						drink: '$drink',
+						_id: '$_id',
+						drinkThumb: '$drinkThumb',
+						category: '$category'
+					}
+				}
+			}
 		},
-	  },
-	  {
-		$project: {
-		  _id: 0,
-		  category: '$_id',
-		  drinks: { $slice: ['$drinks', 20] }, // обмеження до 20 елементів на кожну категорію
-		},
-	  },
+		{
+			$project: {
+				_id: 0,
+				category: '$_id',
+				drinks: { $slice: ['$drinks', 20] } // обмеження до 20 елементів на кожну категорію
+			}
+		}
 	]);
-const finalResult= result.map(o => o.drinks)
-.reduce((a1, a2) => a1.concat(a2), []);
+	const finalResult = result
+		.map((o) => o.drinks)
+		.reduce((a1, a2) => a1.concat(a2), []);
 	res.json(finalResult);
-  };
-
+};
 
 const getOneDrinkById = async (req, res) => {
 	const { id } = req.params;
@@ -118,7 +107,6 @@ const getDrinksByIngredient = async (req, res) => {
 	const { page = 1, limit = 9 } = req.query;
 	const skip = (page - 1) * limit;
 	const result = await Drinks.find(
-		// { ingredients: { $elemMatch: { title } } },
 		{ 'ingredients.title': title },
 		'drink drinkThumb category ingredients',
 		{
@@ -226,31 +214,36 @@ const deleteFavoriteDrink = async (req, res) => {
 const getPopular = async (req, res) => {
 	const result = await Drinks.aggregate([
 		{
-		  $unwind: "$favorite"
+			$unwind: '$favorite'
 		},
 		{
-		  $group: {
-			_id: { _id: "$_id", drink: "$drink", about: "$about", drinkThumb: "$drinkThumb" },
-			favoriteCount: { $sum: 1 }
-		  }
+			$group: {
+				_id: {
+					_id: '$_id',
+					drink: '$drink',
+					about: '$about',
+					drinkThumb: '$drinkThumb'
+				},
+				favoriteCount: { $sum: 1 }
+			}
 		},
 		{
-		  $sort: { favoriteCount: -1 }
+			$sort: { favoriteCount: -1 }
 		},
 		{
-		  $limit: 4
+			$limit: 4
 		},
 		{
-		  $project: {
-			_id: "$_id._id",
-            drink: "$_id.drink",
-            about: "$_id.about",
-            drinkThumb: "$_id.drinkThumb",
-            favoriteCount: 1,
-		  }
+			$project: {
+				_id: '$_id._id',
+				drink: '$_id.drink',
+				about: '$_id.about',
+				drinkThumb: '$_id.drinkThumb',
+				favoriteCount: 1
+			}
 		}
-	  ]);
-	  
+	]);
+
 	res.json(result);
 };
 

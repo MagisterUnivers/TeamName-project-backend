@@ -10,9 +10,9 @@
   This project was created by Tech Titans to demonstrate the basic knowledge of
   Node + React, a popular combination for building server-side rendered and
   static websites. The focus of this test is to showcase understanding of
-  fundamentals, including routing, data fetching, and component composition.
+  fundamentals, including routing, data fetching, and component composition. <br/>
     <a href="https://github.com/MagisterUnivers/TeamName-project/tree/dev"
-      >Link to FrontEnd repository</a>
+  >Link to FrontEnd repository</a>
 </p>
 <br />
 <br />
